@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MatTools - JSON 格式化、时间戳转换 · 在线开发者工具</title>
+  <meta name="description" content="MatTools 开发者工具集,提供 JSON 格式化、时间戳转换等实用工具。数据全部在浏览器本地处理,免费、安全、无广告。">
+  <meta name="keywords" content="JSON格式化,JSON在线工具,时间戳转换,Unix时间戳,在线工具">
+  
+  <!-- favicon: MATT 方阵图标 -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'%3E%3Crect width='60' height='60' fill='%23000'/%3E%3Ctext x='15' y='27' font-family='monospace' font-size='22' font-weight='700' fill='%23fff' text-anchor='middle'%3EM%3C/text%3E%3Ctext x='45' y='27' font-family='monospace' font-size='22' font-weight='700' fill='%23ff6600' text-anchor='middle'%3EA%3C/text%3E%3Ctext x='15' y='53' font-family='monospace' font-size='22' font-weight='700' fill='%23ff6600' text-anchor='middle'%3ET%3C/text%3E%3Ctext x='45' y='53' font-family='monospace' font-size='22' font-weight='700' fill='%23fff' text-anchor='middle'%3ET%3C/text%3E%3C/svg%3E">
+  
+  <style>
+    :root {
+      --bg-page: #ffffff;
+      --bg-panel: #ffffff;
+      --bg-output: #fafafa;
+      --bg-button-primary: #000000;
+      --bg-button-primary-hover: #1a1a1a;
+      --text-primary: #000000;
+      --text-secondary: #666666;
+      --text-tertiary: #999999;
+      --border-strong: #000000;
+      --border-soft: #d4d4d4;
+      --tab-active-bg: #000000;
+      --tab-active-text: #ffffff;
+      --button-primary-text: #ffffff;
+      --logo-bg: #000000;
+      --logo-text: #ffffff;
+      --brand-accent: #ff6600;  /* 品牌主色:橙红 */
+    }
+
+    [data-theme="dark"] {
+      --bg-page: #0a0a0a;
+      --bg-panel: #111111;
+      --bg-output: #0d0d0d;
+      --bg-button-primary: #ffffff;
+      --bg-button-primary-hover: #e5e5e5;
+      --text-primary: #ffffff;
+      --text-secondary: #999999;
+      --text-tertiary: #666666;
+      --border-strong: #ffffff;
+      --border-soft: #333333;
+      --tab-active-bg: #ffffff;
+      --tab-active-text: #000000;
+      --button-primary-text: #000000;
+      --logo-bg: #ffffff;
+      --logo-text: #000000;
+      --brand-accent: #ff8533;  /* 暗色模式下调亮一点的橙红 */
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'SF Mono', Monaco, Consolas, 'Courier New', 'PingFang SC', 'Microsoft YaHei', monospace;
+      background: var(--bg-page);
+      color: var(--text-primary);
+      min-height: 100vh;
+      padding: 24px;
+      -webkit-font-smoothing: antialiased;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* 顶部头部 */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      padding: 4px;
+    }
+
+    .header-brand {
+      font-size: 12px;
+      color: var(--text-secondary);
+      letter-spacing: 0.5px;
+    }
+
+    /* 主题切换按钮 */
+    .theme-toggle {
+      width: 36px;
+      height: 36px;
+      border: 2px solid var(--border-strong);
+      background: var(--bg-panel);
+      border-radius: 0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-primary);
+      padding: 0;
+      transition: background 0.15s;
+    }
+
+    .theme-toggle:hover {
+      background: var(--bg-output);
+    }
+
+    .theme-toggle svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .theme-toggle .icon-sun { display: none; }
+    .theme-toggle .icon-moon { display: block; }
+    [data-theme="dark"] .theme-toggle .icon-sun { display: block; }
+    [data-theme="dark"] .theme-toggle .icon-moon { display: none; }
+
+    /* 主面板 */
+    .panel {
+      background: var(--bg-panel);
+      border: 2px solid var(--border-strong);
+      overflow: hidden;
+    }
+
+    /* 顶部标题区 */
+    .panel-top {
+      padding: 18px 24px;
+      border-bottom: 2px solid var(--border-strong);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand-area {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    /* MATT Logo 方阵 - 加入橙红色呼应 */
+    .logo-mark {
+      width: 44px;
+      height: 44px;
+      background: var(--logo-bg);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      color: var(--logo-text);
+      font-weight: 700;
+      font-size: 15px;
+      align-items: center;
+      justify-items: center;
+      flex-shrink: 0;
+    }
+
+    .logo-mark span {
+      line-height: 1;
+    }
+
+    /* Logo 里的 A 和 T(左下) 用品牌色,和标题"MatT"呼应 */
+    .logo-mark span:nth-child(2),
+    .logo-mark span:nth-child(3) {
+      color: var(--brand-accent);
+    }
+
+    .brand-text h1 {
+      font-size: 19px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      line-height: 1.2;
+    }
+
+    /* 品牌名: MatT 橙红 + ools 黑色 */
+    .brand-text h1 .matt {
+      color: var(--brand-accent);
+    }
+
+    .brand-text h1 .ools {
+      color: var(--text-primary);
+    }
+
+    .brand-text .tagline {
+      font-size: 11px;
+      color: var(--text-secondary);
+      margin-top: 3px;
+    }
+
+    .version {
+      font-size: 11px;
+      color: var(--text-secondary);
+      white-space: nowrap;
+    }
+
+    /* 工具切换标签栏 */
+    .tabs {
+      display: flex;
+      border-bottom: 2px solid var(--border-strong);
+      overflow-x: auto;
+    }
+
+    .tab {
+      padding: 12px 20px;
+      font-size: 12px;
+      cursor: pointer;
+      border-right: 2px solid var(--border-soft);
+      color: var(--text-tertiary);
+      transition: all 0.15s;
+      white-space: nowrap;
+      user-select: none;
+      background: var(--bg-panel);
+    }
+
+    .tab.active {
+      background: var(--tab-active-bg);
+      color: var(--tab-active-text);
+      border-right-color: var(--border-strong);
+    }
+
+    .tab:not(.active):not(.disabled):hover {
+      color: var(--text-primary);
+      background: var(--bg-output);
+    }
+
+    .tab.disabled {
+      cursor: not-allowed;
+      color: var(--text-tertiary);
+    }
+
+    .tab-spacer {
+      flex: 1;
+      border-right: none;
+      padding: 12px 20px;
+      font-size: 11px;
+      color: var(--text-tertiary);
+      text-align: right;
+      background: var(--bg-panel);
+    }
+
+    /* 工具栏 */
+    .toolbar {
+      padding: 14px 20px;
+      border-bottom: 2px solid var(--border-strong);
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    button {
+      padding: 7px 14px;
+      background: var(--bg-panel);
+      color: var(--text-primary);
+      border: 2px solid var(--border-strong);
+      font-size: 11px;
+      cursor: pointer;
+      font-family: inherit;
+      border-radius: 0;
+      transition: all 0.15s;
+    }
+
+    button:hover {
+      background: var(--bg-output);
+    }
+
+    button.primary {
+      background: var(--bg-button-primary);
+      color: var(--button-primary-text);
+      border-color: var(--border-strong);
+    }
+
+    button.primary:hover {
+      background: var(--bg-button-primary-hover);
+    }
+
+    button.text-only {
+      border: 2px solid var(--border-soft);
+      color: var(--text-secondary);
+    }
+
+    button.text-only:hover {
+      color: var(--text-primary);
+      border-color: var(--border-strong);
+    }
+
+    .toolbar-spacer {
+      flex: 1;
+    }
+
+    /* 工具页面容器 */
+    .tool-page {
+      display: none;
+    }
+    .tool-page.active {
+      display: block;
+    }
+
+    /* ===== JSON 工具样式 ===== */
+    .editor-wrapper {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 500px;
+    }
+
+    @media (max-width: 768px) {
+      .editor-wrapper {
+        grid-template-columns: 1fr;
+      }
+      .editor-panel:first-child {
+        border-right: none;
+        border-bottom: 2px solid var(--border-strong);
+      }
+    }
+
+    .editor-panel {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .editor-panel:first-child {
+      border-right: 2px solid var(--border-strong);
+    }
+
+    .panel-header {
+      padding: 12px 20px 6px;
+      font-size: 10px;
+      color: var(--text-tertiary);
+      letter-spacing: 0.5px;
+    }
+
+    .panel-header.output-header {
+      background: var(--bg-output);
+    }
+
+    textarea {
+      flex: 1;
+      width: 100%;
+      padding: 4px 20px 20px;
+      border: none;
+      resize: none;
+      font-family: 'SF Mono', Monaco, Consolas, monospace;
+      font-size: 12px;
+      line-height: 1.7;
+      outline: none;
+      background: var(--bg-panel);
+      color: var(--text-primary);
+      min-height: 460px;
+    }
+
+    textarea.output {
+      background: var(--bg-output);
+    }
+
+    textarea::placeholder {
+      color: var(--text-tertiary);
+    }
+
+    /* ===== 时间戳工具样式 ===== */
+    .timestamp-tool {
+      padding: 24px;
+    }
+
+    .ts-section {
+      border: 2px solid var(--border-strong);
+      margin-bottom: 20px;
+    }
+
+    .ts-section:last-child {
+      margin-bottom: 0;
+    }
+
+    .ts-section-header {
+      padding: 10px 16px;
+      background: var(--bg-output);
+      border-bottom: 2px solid var(--border-strong);
+      font-size: 11px;
+      letter-spacing: 0.5px;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .ts-section-body {
+      padding: 16px;
+    }
+
+    .ts-row {
+      display: grid;
+      grid-template-columns: 110px 1fr auto;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    @media (max-width: 600px) {
+      .ts-row {
+        grid-template-columns: 1fr;
+        gap: 4px;
+      }
+    }
+
+    .ts-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .ts-label {
+      font-size: 11px;
+      color: var(--text-secondary);
+      letter-spacing: 0.5px;
+    }
+
+    .ts-input {
+      width: 100%;
+      padding: 8px 12px;
+      border: 2px solid var(--border-soft);
+      background: var(--bg-panel);
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 12px;
+      outline: none;
+      border-radius: 0;
+    }
+
+    .ts-input:focus {
+      border-color: var(--border-strong);
+    }
+
+    .ts-input[readonly] {
+      background: var(--bg-output);
+      color: var(--text-secondary);
+    }
+
+    .ts-unit-toggle {
+      display: flex;
+      gap: 0;
+      border: 2px solid var(--border-strong);
+    }
+
+    .ts-unit-toggle button {
+      padding: 6px 12px;
+      border: none;
+      background: var(--bg-panel);
+      font-size: 11px;
+      color: var(--text-secondary);
+      cursor: pointer;
+    }
+
+    .ts-unit-toggle button + button {
+      border-left: 2px solid var(--border-strong);
+    }
+
+    .ts-unit-toggle button.active {
+      background: var(--bg-button-primary);
+      color: var(--button-primary-text);
+    }
+
+    .ts-current {
+      background: var(--bg-output);
+      border-top: 2px solid var(--border-strong);
+      padding: 12px 16px;
+      display: grid;
+      grid-template-columns: auto 1fr auto 1fr;
+      gap: 16px;
+      align-items: center;
+      font-size: 11px;
+    }
+
+    @media (max-width: 600px) {
+      .ts-current {
+        grid-template-columns: 1fr;
+        gap: 4px;
+      }
+    }
+
+    .ts-current-label {
+      color: var(--text-secondary);
+      letter-spacing: 0.5px;
+    }
+
+    .ts-current-value {
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    /* ===== 底部状态栏 ===== */
+    .status-bar {
+      padding: 8px 20px;
+      border-top: 2px solid var(--border-strong);
+      font-size: 10px;
+      color: var(--text-secondary);
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      letter-spacing: 0.3px;
+      flex-wrap: wrap;
+    }
+
+    .status-item span.value {
+      color: var(--text-primary);
+    }
+
+    .status-message {
+      flex: 1;
+      text-align: right;
+      min-width: 0;
+    }
+
+    /* 状态消息保持默认颜色,不用品牌色突出 */
+
+    /* 底部页脚 */
+    footer {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 11px;
+      color: var(--text-tertiary);
+    }
+
+    footer .footer-brand .matt {
+      color: var(--brand-accent);
+      font-weight: 500;
+    }
+
+    footer .footer-brand .ools {
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- 头部 -->
+    <div class="header">
+      <div class="header-brand">数据不离开浏览器 · 免费无广告</div>
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="切换明暗主题">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2"></path><path d="M12 20v2"></path>
+          <path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path>
+          <path d="M2 12h2"></path><path d="M20 12h2"></path>
+          <path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path>
+        </svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- 主面板 -->
+    <div class="panel">
+      <!-- 品牌区 -->
+      <div class="panel-top">
+        <div class="brand-area">
+          <div class="logo-mark" aria-label="MatTools Logo">
+            <span>M</span><span>A</span><span>T</span><span>T</span>
+          </div>
+          <div class="brand-text">
+            <h1><span class="matt">MatT</span><span class="ools">ools</span></h1>
+            <div class="tagline">简洁好用的开发者工具集</div>
+          </div>
+        </div>
+        <div class="version">v0.1.0</div>
+      </div>
+
+      <!-- 工具切换标签 -->
+      <div class="tabs">
+        <div class="tab active" data-tool="json" onclick="switchTool('json')">[JSON 格式化]</div>
+        <div class="tab" data-tool="timestamp" onclick="switchTool('timestamp')">[时间戳转换]</div>
+        <div class="tab disabled">[Base64]*</div>
+        <div class="tab disabled">[URL 编码]*</div>
+        <div class="tab-spacer">* = 即将上线</div>
+      </div>
+
+      <!-- JSON 工具页面 -->
+      <div class="tool-page active" id="page-json">
+        <div class="toolbar">
+          <button class="action primary" data-action="format" onclick="jsonFormat()">▶ 格式化</button>
+          <button class="action" data-action="minify" onclick="jsonMinify()">压缩</button>
+          <button class="action" data-action="validate" onclick="jsonValidate()">校验</button>
+          <button class="action" data-action="example" onclick="jsonExample()">示例</button>
+          <div class="toolbar-spacer"></div>
+          <button class="text-only" onclick="jsonClear()">清空</button>
+          <button class="text-only" onclick="jsonCopy()">复制结果</button>
+        </div>
+
+        <div class="editor-wrapper">
+          <div class="editor-panel">
+            <div class="panel-header">→ 输入</div>
+            <textarea id="json-input" placeholder='在这里粘贴你的 JSON
+{"name":"张三","age":30}'></textarea>
+          </div>
+          <div class="editor-panel">
+            <div class="panel-header output-header">← 输出</div>
+            <textarea id="json-output" class="output" readonly placeholder="处理结果会显示在这里"></textarea>
+          </div>
+        </div>
+
+        <div class="status-bar">
+          <div class="status-item">状态: <span class="value" id="json-status">空闲</span></div>
+          <div class="status-item">大小: <span class="value" id="json-size">0</span> 字节</div>
+          <div class="status-item">键数: <span class="value" id="json-keys">0</span></div>
+          <div class="status-message" id="json-message"></div>
+        </div>
+      </div>
+
+      <!-- 时间戳工具页面 -->
+      <div class="tool-page" id="page-timestamp">
+        <div class="toolbar">
+          <button class="primary" onclick="tsLoadNow()">▶ 填入当前时间</button>
+          <div class="toolbar-spacer"></div>
+          <button class="text-only" onclick="tsClear()">清空</button>
+        </div>
+
+        <div class="timestamp-tool">
+          <div class="ts-section">
+            <div class="ts-section-header">
+              <span>// 时间戳 → 日期</span>
+              <div class="ts-unit-toggle">
+                <button class="active" id="ts2date-unit-s" onclick="tsSetUnit('toDate', 's')">秒 (s)</button>
+                <button id="ts2date-unit-ms" onclick="tsSetUnit('toDate', 'ms')">毫秒 (ms)</button>
+              </div>
+            </div>
+            <div class="ts-section-body">
+              <div class="ts-row">
+                <div class="ts-label">时间戳</div>
+                <input type="text" class="ts-input" id="ts2date-input" placeholder="输入时间戳,如 1716172800" oninput="tsToDate()">
+                <button onclick="tsCopyValue('ts2date-input')">复制</button>
+              </div>
+              <div class="ts-row">
+                <div class="ts-label">本地时间</div>
+                <input type="text" class="ts-input" id="ts2date-datetime" readonly>
+                <button onclick="tsCopyValue('ts2date-datetime')">复制</button>
+              </div>
+              <div class="ts-row">
+                <div class="ts-label">UTC 时间</div>
+                <input type="text" class="ts-input" id="ts2date-utc" readonly>
+                <button onclick="tsCopyValue('ts2date-utc')">复制</button>
+              </div>
+              <div class="ts-row">
+                <div class="ts-label">ISO 8601</div>
+                <input type="text" class="ts-input" id="ts2date-iso" readonly>
+                <button onclick="tsCopyValue('ts2date-iso')">复制</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="ts-section">
+            <div class="ts-section-header">
+              <span>// 日期 → 时间戳</span>
+            </div>
+            <div class="ts-section-body">
+              <div class="ts-row">
+                <div class="ts-label">日期时间</div>
+                <input type="text" class="ts-input" id="date2ts-input" placeholder="YYYY-MM-DD HH:MM:SS,如 2026-05-19 12:00:00" oninput="tsFromDate()">
+                <button onclick="tsCopyValue('date2ts-input')">复制</button>
+              </div>
+              <div class="ts-row">
+                <div class="ts-label">秒 (s)</div>
+                <input type="text" class="ts-input" id="date2ts-s" readonly>
+                <button onclick="tsCopyValue('date2ts-s')">复制</button>
+              </div>
+              <div class="ts-row">
+                <div class="ts-label">毫秒 (ms)</div>
+                <input type="text" class="ts-input" id="date2ts-ms" readonly>
+                <button onclick="tsCopyValue('date2ts-ms')">复制</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ts-current">
+          <span class="ts-current-label">当前时间:</span>
+          <span class="ts-current-value" id="ts-now-datetime">—</span>
+          <span class="ts-current-label">秒 / 毫秒:</span>
+          <span class="ts-current-value"><span id="ts-now-s">—</span> / <span id="ts-now-ms">—</span></span>
+        </div>
+
+        <div class="status-bar">
+          <div class="status-item">状态: <span class="value" id="ts-status">空闲</span></div>
+          <div class="status-message" id="ts-message"></div>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <span class="footer-brand"><span class="matt">MatT</span><span class="ools">ools</span></span> · 所有数据在浏览器本地处理,不会上传到任何服务器
+    </footer>
+  </div>
+
+  <script>
+    /* 主题切换 */
+    function toggleTheme() {
+      const cur = document.documentElement.getAttribute('data-theme');
+      document.documentElement.setAttribute('data-theme', cur === 'dark' ? 'light' : 'dark');
+    }
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    }
+
+    /* 工具切换 */
+    function switchTool(toolId) {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tool-page').forEach(p => p.classList.remove('active'));
+      document.querySelector(`.tab[data-tool="${toolId}"]`).classList.add('active');
+      document.getElementById('page-' + toolId).classList.add('active');
+    }
+
+    /* 通用函数 */
+    function showMessage(elId, text, type) {
+      const el = document.getElementById(elId);
+      el.textContent = text;
+      el.className = 'status-message ' + (type || '');
+      if (type === 'success') {
+        setTimeout(() => {
+          el.textContent = '';
+          el.className = 'status-message';
+        }, 3000);
+      }
+    }
+
+    /* JSON 工具 */
+    const jsonInput = document.getElementById('json-input');
+    const jsonOutput = document.getElementById('json-output');
+
+    function countKeys(obj) {
+      if (obj === null || typeof obj !== 'object') return 0;
+      let count = 0;
+      if (Array.isArray(obj)) {
+        obj.forEach(item => count += countKeys(item));
+      } else {
+        count = Object.keys(obj).length;
+        Object.values(obj).forEach(v => count += countKeys(v));
+      }
+      return count;
+    }
+
+    function jsonUpdateStatus(text) {
+      document.getElementById('json-size').textContent = text.length;
+      if (!text.trim()) {
+        document.getElementById('json-status').textContent = '空闲';
+        document.getElementById('json-keys').textContent = '0';
+        return;
+      }
+      try {
+        const parsed = JSON.parse(text);
+        document.getElementById('json-status').textContent = '合法';
+        document.getElementById('json-keys').textContent = countKeys(parsed);
+      } catch {
+        document.getElementById('json-status').textContent = '错误';
+        document.getElementById('json-keys').textContent = '0';
+      }
+    }
+
+    jsonInput.addEventListener('input', () => jsonUpdateStatus(jsonInput.value));
+
+    /* 设置当前激活的操作按钮 */
+    function setActiveAction(toolPrefix, action) {
+      document.querySelectorAll(`#page-${toolPrefix} .action`).forEach(btn => {
+        btn.classList.toggle('primary', btn.dataset.action === action);
+        // 主按钮带 "▶" 前缀
+        const baseText = btn.textContent.replace(/^▶\s*/, '');
+        btn.textContent = btn.dataset.action === action ? '▶ ' + baseText : baseText;
+      });
+    }
+
+    function jsonFormat() {
+      const text = jsonInput.value.trim();
+      if (!text) return showMessage('json-message', '// 请先输入 JSON', 'error');
+      try {
+        jsonOutput.value = JSON.stringify(JSON.parse(text), null, 2);
+        setActiveAction('json', 'format');
+        showMessage('json-message', '// 格式化成功', 'success');
+      } catch (e) {
+        jsonOutput.value = '';
+        showMessage('json-message', '// 错误: ' + e.message, 'error');
+      }
+    }
+
+    function jsonMinify() {
+      const text = jsonInput.value.trim();
+      if (!text) return showMessage('json-message', '// 请先输入 JSON', 'error');
+      try {
+        jsonOutput.value = JSON.stringify(JSON.parse(text));
+        const saved = ((1 - jsonOutput.value.length / text.length) * 100).toFixed(1);
+        setActiveAction('json', 'minify');
+        showMessage('json-message', `// 压缩成功,节省 ${saved}%`, 'success');
+      } catch (e) {
+        jsonOutput.value = '';
+        showMessage('json-message', '// 错误: ' + e.message, 'error');
+      }
+    }
+
+    function jsonValidate() {
+      const text = jsonInput.value.trim();
+      if (!text) return showMessage('json-message', '// 请先输入 JSON', 'error');
+      try {
+        JSON.parse(text);
+        setActiveAction('json', 'validate');
+        showMessage('json-message', '// 合法的 JSON', 'success');
+      } catch (e) {
+        showMessage('json-message', '// ' + e.message, 'error');
+      }
+    }
+
+    function jsonCopy() {
+      if (!jsonOutput.value) return showMessage('json-message', '// 没有可复制的内容', 'error');
+      navigator.clipboard.writeText(jsonOutput.value).then(() => {
+        showMessage('json-message', '// 已复制', 'success');
+      });
+    }
+
+    function jsonExample() {
+      jsonInput.value = '{"name":"张三","age":30,"isStudent":false,"hobbies":["读书","跑步","编程"],"address":{"city":"北京","zip":"100000"}}';
+      jsonUpdateStatus(jsonInput.value);
+      setActiveAction('json', 'example');
+      showMessage('json-message', '// 已加载示例', 'success');
+    }
+
+    function jsonClear() {
+      jsonInput.value = '';
+      jsonOutput.value = '';
+      jsonUpdateStatus('');
+      setActiveAction('json', 'format');  // 清空后回到"格式化"默认状态
+      showMessage('json-message', '', '');
+    }
+
+    /* 时间戳工具 */
+    let tsToDateUnit = 's';
+
+    function padZero(n) { return String(n).padStart(2, '0'); }
+
+    function formatDate(date) {
+      return `${date.getFullYear()}-${padZero(date.getMonth()+1)}-${padZero(date.getDate())} ${padZero(date.getHours())}:${padZero(date.getMinutes())}:${padZero(date.getSeconds())}`;
+    }
+
+    function tsSetUnit(direction, unit) {
+      if (direction === 'toDate') {
+        tsToDateUnit = unit;
+        document.getElementById('ts2date-unit-s').classList.toggle('active', unit === 's');
+        document.getElementById('ts2date-unit-ms').classList.toggle('active', unit === 'ms');
+        tsToDate();
+      }
+    }
+
+    function tsToDate() {
+      const raw = document.getElementById('ts2date-input').value.trim();
+      const setVal = (id, v) => document.getElementById(id).value = v;
+      if (!raw) {
+        setVal('ts2date-datetime', '');
+        setVal('ts2date-utc', '');
+        setVal('ts2date-iso', '');
+        document.getElementById('ts-status').textContent = '空闲';
+        return;
+      }
+      const num = Number(raw);
+      if (isNaN(num)) {
+        setVal('ts2date-datetime', '');
+        setVal('ts2date-utc', '');
+        setVal('ts2date-iso', '');
+        document.getElementById('ts-status').textContent = '错误';
+        showMessage('ts-message', '// 请输入数字', 'error');
+        return;
+      }
+      const ms = tsToDateUnit === 's' ? num * 1000 : num;
+      const date = new Date(ms);
+      if (isNaN(date.getTime())) {
+        document.getElementById('ts-status').textContent = '错误';
+        showMessage('ts-message', '// 时间戳无效', 'error');
+        return;
+      }
+      setVal('ts2date-datetime', formatDate(date));
+      setVal('ts2date-utc', date.toUTCString());
+      setVal('ts2date-iso', date.toISOString());
+      document.getElementById('ts-status').textContent = '成功';
+    }
+
+    function tsFromDate() {
+      const raw = document.getElementById('date2ts-input').value.trim();
+      const setVal = (id, v) => document.getElementById(id).value = v;
+      if (!raw) {
+        setVal('date2ts-s', '');
+        setVal('date2ts-ms', '');
+        return;
+      }
+      let normalized = raw.replace(' ', 'T');
+      let date = new Date(normalized);
+      if (isNaN(date.getTime())) {
+        date = new Date(raw);
+        if (isNaN(date.getTime())) {
+          setVal('date2ts-s', '');
+          setVal('date2ts-ms', '');
+          showMessage('ts-message', '// 日期格式无法识别', 'error');
+          return;
+        }
+      }
+      const ms = date.getTime();
+      setVal('date2ts-s', Math.floor(ms / 1000));
+      setVal('date2ts-ms', ms);
+    }
+
+    function tsLoadNow() {
+      const now = new Date();
+      document.getElementById('ts2date-input').value = tsToDateUnit === 's' ? Math.floor(now.getTime() / 1000) : now.getTime();
+      document.getElementById('date2ts-input').value = formatDate(now);
+      tsToDate();
+      tsFromDate();
+      showMessage('ts-message', '// 已填入当前时间', 'success');
+    }
+
+    function tsClear() {
+      ['ts2date-input', 'ts2date-datetime', 'ts2date-utc', 'ts2date-iso',
+       'date2ts-input', 'date2ts-s', 'date2ts-ms'].forEach(id => {
+        document.getElementById(id).value = '';
+      });
+      document.getElementById('ts-status').textContent = '空闲';
+      showMessage('ts-message', '', '');
+    }
+
+    function tsCopyValue(id) {
+      const val = document.getElementById(id).value;
+      if (!val) return showMessage('ts-message', '// 没有可复制的内容', 'error');
+      navigator.clipboard.writeText(val).then(() => {
+        showMessage('ts-message', '// 已复制: ' + val, 'success');
+      });
+    }
+
+    function updateNowDisplay() {
+      const now = new Date();
+      document.getElementById('ts-now-datetime').textContent = formatDate(now);
+      document.getElementById('ts-now-s').textContent = Math.floor(now.getTime() / 1000);
+      document.getElementById('ts-now-ms').textContent = now.getTime();
+    }
+    setInterval(updateNowDisplay, 1000);
+    updateNowDisplay();
+  </script>
+</body>
+</html>
