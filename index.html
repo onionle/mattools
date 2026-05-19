@@ -3,11 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MatTools - JSON 格式化、时间戳转换 · 在线开发者工具</title>
-  <meta name="description" content="MatTools 开发者工具集,提供 JSON 格式化、时间戳转换等实用工具。数据全部在浏览器本地处理,免费、安全、无广告。">
-  <meta name="keywords" content="JSON格式化,JSON在线工具,时间戳转换,Unix时间戳,在线工具">
+  <title>MatTools - JSON 格式化、Base64、URL 编码、时间戳转换 · 在线开发者工具</title>
+  <meta name="description" content="MatTools 开发者工具集,提供 JSON 格式化、Base64 编解码、URL 编码、JSON 转 TypeScript、时间戳转换等实用工具。数据全部在浏览器本地处理,免费、安全、无广告。">
+  <meta name="keywords" content="JSON格式化,Base64编码,URL编码,JSON转TypeScript,时间戳转换,在线开发者工具">
   
-  <!-- favicon: MATT 方阵图标 -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'%3E%3Crect width='60' height='60' fill='%23000'/%3E%3Ctext x='15' y='27' font-family='monospace' font-size='22' font-weight='700' fill='%23fff' text-anchor='middle'%3EM%3C/text%3E%3Ctext x='45' y='27' font-family='monospace' font-size='22' font-weight='700' fill='%23ff6600' text-anchor='middle'%3EA%3C/text%3E%3Ctext x='15' y='53' font-family='monospace' font-size='22' font-weight='700' fill='%23ff6600' text-anchor='middle'%3ET%3C/text%3E%3Ctext x='45' y='53' font-family='monospace' font-size='22' font-weight='700' fill='%23fff' text-anchor='middle'%3ET%3C/text%3E%3C/svg%3E">
   
   <style>
@@ -27,7 +26,7 @@
       --button-primary-text: #ffffff;
       --logo-bg: #000000;
       --logo-text: #ffffff;
-      --brand-accent: #ff6600;  /* 品牌主色:橙红 */
+      --brand-accent: #ff6600;
     }
 
     [data-theme="dark"] {
@@ -46,14 +45,10 @@
       --button-primary-text: #000000;
       --logo-bg: #ffffff;
       --logo-text: #000000;
-      --brand-accent: #ff8533;  /* 暗色模式下调亮一点的橙红 */
+      --brand-accent: #ff8533;
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       font-family: 'SF Mono', Monaco, Consolas, 'Courier New', 'PingFang SC', 'Microsoft YaHei', monospace;
@@ -65,12 +60,8 @@
       transition: background 0.2s, color 0.2s;
     }
 
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-    }
+    .container { max-width: 1200px; margin: 0 auto; }
 
-    /* 顶部头部 */
     .header {
       display: flex;
       align-items: center;
@@ -85,44 +76,31 @@
       letter-spacing: 0.5px;
     }
 
-    /* 主题切换按钮 */
     .theme-toggle {
-      width: 36px;
-      height: 36px;
+      width: 36px; height: 36px;
       border: 2px solid var(--border-strong);
       background: var(--bg-panel);
       border-radius: 0;
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
       color: var(--text-primary);
       padding: 0;
       transition: background 0.15s;
     }
 
-    .theme-toggle:hover {
-      background: var(--bg-output);
-    }
-
-    .theme-toggle svg {
-      width: 16px;
-      height: 16px;
-    }
-
+    .theme-toggle:hover { background: var(--bg-output); }
+    .theme-toggle svg { width: 16px; height: 16px; }
     .theme-toggle .icon-sun { display: none; }
     .theme-toggle .icon-moon { display: block; }
     [data-theme="dark"] .theme-toggle .icon-sun { display: block; }
     [data-theme="dark"] .theme-toggle .icon-moon { display: none; }
 
-    /* 主面板 */
     .panel {
       background: var(--bg-panel);
       border: 2px solid var(--border-strong);
       overflow: hidden;
     }
 
-    /* 顶部标题区 */
     .panel-top {
       padding: 18px 24px;
       border-bottom: 2px solid var(--border-strong);
@@ -132,16 +110,10 @@
       gap: 16px;
     }
 
-    .brand-area {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
+    .brand-area { display: flex; align-items: center; gap: 14px; }
 
-    /* MATT Logo 方阵 - 加入橙红色呼应 */
     .logo-mark {
-      width: 44px;
-      height: 44px;
+      width: 44px; height: 44px;
       background: var(--logo-bg);
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -154,11 +126,8 @@
       flex-shrink: 0;
     }
 
-    .logo-mark span {
-      line-height: 1;
-    }
+    .logo-mark span { line-height: 1; }
 
-    /* Logo 里的 A 和 T(左下) 用品牌色,和标题"MatT"呼应 */
     .logo-mark span:nth-child(2),
     .logo-mark span:nth-child(3) {
       color: var(--brand-accent);
@@ -171,14 +140,8 @@
       line-height: 1.2;
     }
 
-    /* 品牌名: MatT 橙红 + ools 黑色 */
-    .brand-text h1 .matt {
-      color: var(--brand-accent);
-    }
-
-    .brand-text h1 .ools {
-      color: var(--text-primary);
-    }
+    .brand-text h1 .matt { color: var(--brand-accent); }
+    .brand-text h1 .ools { color: var(--text-primary); }
 
     .brand-text .tagline {
       font-size: 11px;
@@ -192,7 +155,6 @@
       white-space: nowrap;
     }
 
-    /* 工具切换标签栏 */
     .tabs {
       display: flex;
       border-bottom: 2px solid var(--border-strong);
@@ -222,10 +184,7 @@
       background: var(--bg-output);
     }
 
-    .tab.disabled {
-      cursor: not-allowed;
-      color: var(--text-tertiary);
-    }
+    .tab.disabled { cursor: not-allowed; color: var(--text-tertiary); }
 
     .tab-spacer {
       flex: 1;
@@ -237,7 +196,6 @@
       background: var(--bg-panel);
     }
 
-    /* 工具栏 */
     .toolbar {
       padding: 14px 20px;
       border-bottom: 2px solid var(--border-strong);
@@ -259,9 +217,7 @@
       transition: all 0.15s;
     }
 
-    button:hover {
-      background: var(--bg-output);
-    }
+    button:hover { background: var(--bg-output); }
 
     button.primary {
       background: var(--bg-button-primary);
@@ -269,9 +225,7 @@
       border-color: var(--border-strong);
     }
 
-    button.primary:hover {
-      background: var(--bg-button-primary-hover);
-    }
+    button.primary:hover { background: var(--bg-button-primary-hover); }
 
     button.text-only {
       border: 2px solid var(--border-soft);
@@ -283,19 +237,12 @@
       border-color: var(--border-strong);
     }
 
-    .toolbar-spacer {
-      flex: 1;
-    }
+    .toolbar-spacer { flex: 1; }
 
-    /* 工具页面容器 */
-    .tool-page {
-      display: none;
-    }
-    .tool-page.active {
-      display: block;
-    }
+    .tool-page { display: none; }
+    .tool-page.active { display: block; }
 
-    /* ===== JSON 工具样式 ===== */
+    /* ===== 双栏编辑器（JSON / Base64 / URL / JSON转TS 共用） ===== */
     .editor-wrapper {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -303,23 +250,15 @@
     }
 
     @media (max-width: 768px) {
-      .editor-wrapper {
-        grid-template-columns: 1fr;
-      }
+      .editor-wrapper { grid-template-columns: 1fr; }
       .editor-panel:first-child {
         border-right: none;
         border-bottom: 2px solid var(--border-strong);
       }
     }
 
-    .editor-panel {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .editor-panel:first-child {
-      border-right: 2px solid var(--border-strong);
-    }
+    .editor-panel { display: flex; flex-direction: column; }
+    .editor-panel:first-child { border-right: 2px solid var(--border-strong); }
 
     .panel-header {
       padding: 12px 20px 6px;
@@ -328,9 +267,7 @@
       letter-spacing: 0.5px;
     }
 
-    .panel-header.output-header {
-      background: var(--bg-output);
-    }
+    .panel-header.output-header { background: var(--bg-output); }
 
     textarea {
       flex: 1;
@@ -347,27 +284,72 @@
       min-height: 460px;
     }
 
-    textarea.output {
+    textarea.output { background: var(--bg-output); }
+    textarea::placeholder { color: var(--text-tertiary); }
+
+    /* ===== 选项栏（用于 Base64/URL 的选项 + 类型名输入） ===== */
+    .options-bar {
+      padding: 10px 20px;
+      border-bottom: 2px solid var(--border-soft);
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      flex-wrap: wrap;
       background: var(--bg-output);
+      font-size: 11px;
+      color: var(--text-secondary);
     }
 
-    textarea::placeholder {
-      color: var(--text-tertiary);
+    .option-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .option-group label {
+      font-size: 11px;
+      color: var(--text-secondary);
+    }
+
+    .inline-input {
+      padding: 5px 10px;
+      border: 2px solid var(--border-soft);
+      background: var(--bg-panel);
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 11px;
+      outline: none;
+      border-radius: 0;
+      width: 150px;
+    }
+
+    .inline-input:focus { border-color: var(--border-strong); }
+
+    /* 自定义复选框样式 */
+    .checkbox-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .checkbox-wrapper input[type="checkbox"] {
+      width: 14px;
+      height: 14px;
+      cursor: pointer;
+      accent-color: var(--brand-accent);
     }
 
     /* ===== 时间戳工具样式 ===== */
-    .timestamp-tool {
-      padding: 24px;
-    }
+    .timestamp-tool { padding: 24px; }
 
     .ts-section {
       border: 2px solid var(--border-strong);
       margin-bottom: 20px;
     }
 
-    .ts-section:last-child {
-      margin-bottom: 0;
-    }
+    .ts-section:last-child { margin-bottom: 0; }
 
     .ts-section-header {
       padding: 10px 16px;
@@ -383,9 +365,7 @@
       gap: 8px;
     }
 
-    .ts-section-body {
-      padding: 16px;
-    }
+    .ts-section-body { padding: 16px; }
 
     .ts-row {
       display: grid;
@@ -396,15 +376,10 @@
     }
 
     @media (max-width: 600px) {
-      .ts-row {
-        grid-template-columns: 1fr;
-        gap: 4px;
-      }
+      .ts-row { grid-template-columns: 1fr; gap: 4px; }
     }
 
-    .ts-row:last-child {
-      margin-bottom: 0;
-    }
+    .ts-row:last-child { margin-bottom: 0; }
 
     .ts-label {
       font-size: 11px;
@@ -424,10 +399,7 @@
       border-radius: 0;
     }
 
-    .ts-input:focus {
-      border-color: var(--border-strong);
-    }
-
+    .ts-input:focus { border-color: var(--border-strong); }
     .ts-input[readonly] {
       background: var(--bg-output);
       color: var(--text-secondary);
@@ -469,10 +441,7 @@
     }
 
     @media (max-width: 600px) {
-      .ts-current {
-        grid-template-columns: 1fr;
-        gap: 4px;
-      }
+      .ts-current { grid-template-columns: 1fr; gap: 4px; }
     }
 
     .ts-current-label {
@@ -485,7 +454,7 @@
       font-weight: 500;
     }
 
-    /* ===== 底部状态栏 ===== */
+    /* ===== 状态栏 ===== */
     .status-bar {
       padding: 8px 20px;
       border-top: 2px solid var(--border-strong);
@@ -498,9 +467,7 @@
       flex-wrap: wrap;
     }
 
-    .status-item span.value {
-      color: var(--text-primary);
-    }
+    .status-item span.value { color: var(--text-primary); }
 
     .status-message {
       flex: 1;
@@ -508,9 +475,6 @@
       min-width: 0;
     }
 
-    /* 状态消息保持默认颜色,不用品牌色突出 */
-
-    /* 底部页脚 */
     footer {
       text-align: center;
       margin-top: 20px;
@@ -522,7 +486,6 @@
       color: var(--brand-accent);
       font-weight: 500;
     }
-
     footer .footer-brand .ools {
       color: var(--text-secondary);
       font-weight: 500;
@@ -561,19 +524,20 @@
             <div class="tagline">简洁好用的开发者工具集</div>
           </div>
         </div>
-        <div class="version">v0.1.0</div>
+        <div class="version">v0.2.0</div>
       </div>
 
       <!-- 工具切换标签 -->
       <div class="tabs">
         <div class="tab active" data-tool="json" onclick="switchTool('json')">[JSON 格式化]</div>
         <div class="tab" data-tool="timestamp" onclick="switchTool('timestamp')">[时间戳转换]</div>
-        <div class="tab disabled">[Base64]*</div>
-        <div class="tab disabled">[URL 编码]*</div>
-        <div class="tab-spacer">* = 即将上线</div>
+        <div class="tab" data-tool="base64" onclick="switchTool('base64')">[Base64]</div>
+        <div class="tab" data-tool="url" onclick="switchTool('url')">[URL 编码]</div>
+        <div class="tab" data-tool="json2ts" onclick="switchTool('json2ts')">[JSON 转 TS]</div>
+        <div class="tab-spacer">更多工具陆续上线</div>
       </div>
 
-      <!-- JSON 工具页面 -->
+      <!-- ===== JSON 工具 ===== -->
       <div class="tool-page active" id="page-json">
         <div class="toolbar">
           <button class="action primary" data-action="format" onclick="jsonFormat()">▶ 格式化</button>
@@ -584,7 +548,6 @@
           <button class="text-only" onclick="jsonClear()">清空</button>
           <button class="text-only" onclick="jsonCopy()">复制结果</button>
         </div>
-
         <div class="editor-wrapper">
           <div class="editor-panel">
             <div class="panel-header">→ 输入</div>
@@ -596,7 +559,6 @@
             <textarea id="json-output" class="output" readonly placeholder="处理结果会显示在这里"></textarea>
           </div>
         </div>
-
         <div class="status-bar">
           <div class="status-item">状态: <span class="value" id="json-status">空闲</span></div>
           <div class="status-item">大小: <span class="value" id="json-size">0</span> 字节</div>
@@ -605,14 +567,13 @@
         </div>
       </div>
 
-      <!-- 时间戳工具页面 -->
+      <!-- ===== 时间戳工具 ===== -->
       <div class="tool-page" id="page-timestamp">
         <div class="toolbar">
           <button class="primary" onclick="tsLoadNow()">▶ 填入当前时间</button>
           <div class="toolbar-spacer"></div>
           <button class="text-only" onclick="tsClear()">清空</button>
         </div>
-
         <div class="timestamp-tool">
           <div class="ts-section">
             <div class="ts-section-header">
@@ -669,16 +630,126 @@
             </div>
           </div>
         </div>
-
         <div class="ts-current">
           <span class="ts-current-label">当前时间:</span>
           <span class="ts-current-value" id="ts-now-datetime">—</span>
           <span class="ts-current-label">秒 / 毫秒:</span>
           <span class="ts-current-value"><span id="ts-now-s">—</span> / <span id="ts-now-ms">—</span></span>
         </div>
-
         <div class="status-bar">
           <div class="status-item">状态: <span class="value" id="ts-status">空闲</span></div>
+          <div class="status-message" id="ts-message"></div>
+        </div>
+      </div>
+
+      <!-- ===== Base64 工具 ===== -->
+      <div class="tool-page" id="page-base64">
+        <div class="toolbar">
+          <button class="action primary" data-action="encode" onclick="base64Encode()">▶ 编码</button>
+          <button class="action" data-action="decode" onclick="base64Decode()">解码</button>
+          <div class="toolbar-spacer"></div>
+          <button class="text-only" onclick="base64Clear()">清空</button>
+          <button class="text-only" onclick="base64Copy()">复制结果</button>
+        </div>
+        <div class="options-bar">
+          <label class="checkbox-wrapper">
+            <input type="checkbox" id="base64-url-safe">
+            <span>URL 安全模式 (- _ 替代 + /)</span>
+          </label>
+          <span style="color: var(--text-tertiary);">·</span>
+          <span style="color: var(--text-tertiary);">支持中文与任意字符</span>
+        </div>
+        <div class="editor-wrapper">
+          <div class="editor-panel">
+            <div class="panel-header">→ 输入 (原文 或 Base64)</div>
+            <textarea id="base64-input" placeholder='输入要处理的内容
+例如: Hello 世界
+或者粘贴 Base64: SGVsbG8g5LiW55WM'></textarea>
+          </div>
+          <div class="editor-panel">
+            <div class="panel-header output-header">← 输出</div>
+            <textarea id="base64-output" class="output" readonly placeholder="处理结果会显示在这里"></textarea>
+          </div>
+        </div>
+        <div class="status-bar">
+          <div class="status-item">状态: <span class="value" id="base64-status">空闲</span></div>
+          <div class="status-item">输入长度: <span class="value" id="base64-in-len">0</span></div>
+          <div class="status-item">输出长度: <span class="value" id="base64-out-len">0</span></div>
+          <div class="status-message" id="base64-message"></div>
+        </div>
+      </div>
+
+      <!-- ===== URL 编码工具 ===== -->
+      <div class="tool-page" id="page-url">
+        <div class="toolbar">
+          <button class="action primary" data-action="encode" onclick="urlEncode()">▶ 编码</button>
+          <button class="action" data-action="decode" onclick="urlDecode()">解码</button>
+          <div class="toolbar-spacer"></div>
+          <button class="text-only" onclick="urlClear()">清空</button>
+          <button class="text-only" onclick="urlCopy()">复制结果</button>
+        </div>
+        <div class="options-bar">
+          <label class="checkbox-wrapper">
+            <input type="checkbox" id="url-component-mode" checked>
+            <span>严格模式 (encodeURIComponent · 编码所有特殊字符)</span>
+          </label>
+          <span style="color: var(--text-tertiary);">·</span>
+          <span style="color: var(--text-tertiary);">取消勾选则保留 / ? & = # 等</span>
+        </div>
+        <div class="editor-wrapper">
+          <div class="editor-panel">
+            <div class="panel-header">→ 输入 (原文 或 编码内容)</div>
+            <textarea id="url-input" placeholder='输入要处理的内容
+例如: https://example.com/搜索?q=你好&type=1
+或: %E4%BD%A0%E5%A5%BD'></textarea>
+          </div>
+          <div class="editor-panel">
+            <div class="panel-header output-header">← 输出</div>
+            <textarea id="url-output" class="output" readonly placeholder="处理结果会显示在这里"></textarea>
+          </div>
+        </div>
+        <div class="status-bar">
+          <div class="status-item">状态: <span class="value" id="url-status">空闲</span></div>
+          <div class="status-item">输入长度: <span class="value" id="url-in-len">0</span></div>
+          <div class="status-item">输出长度: <span class="value" id="url-out-len">0</span></div>
+          <div class="status-message" id="url-message"></div>
+        </div>
+      </div>
+
+      <!-- ===== JSON 转 TypeScript 工具 ===== -->
+      <div class="tool-page" id="page-json2ts">
+        <div class="toolbar">
+          <button class="primary" onclick="jsonToTs()">▶ 生成 TypeScript</button>
+          <button onclick="jsonToTsExample()">示例</button>
+          <div class="toolbar-spacer"></div>
+          <button class="text-only" onclick="jsonToTsClear()">清空</button>
+          <button class="text-only" onclick="jsonToTsCopy()">复制结果</button>
+        </div>
+        <div class="options-bar">
+          <div class="option-group">
+            <label>根接口名:</label>
+            <input type="text" class="inline-input" id="ts-root-name" value="RootObject" placeholder="RootObject">
+          </div>
+          <span style="color: var(--text-tertiary);">·</span>
+          <label class="checkbox-wrapper">
+            <input type="checkbox" id="ts-export-mode" checked>
+            <span>使用 export interface</span>
+          </label>
+        </div>
+        <div class="editor-wrapper">
+          <div class="editor-panel">
+            <div class="panel-header">→ JSON 输入</div>
+            <textarea id="ts-input" placeholder='粘贴 JSON 自动生成 TypeScript 类型
+{"id":1,"name":"张三","tags":["a","b"]}'></textarea>
+          </div>
+          <div class="editor-panel">
+            <div class="panel-header output-header">← TypeScript 输出</div>
+            <textarea id="ts-output" class="output" readonly placeholder="生成的 TypeScript 接口"></textarea>
+          </div>
+        </div>
+        <div class="status-bar">
+          <div class="status-item">状态: <span class="value" id="ts-status-bar">空闲</span></div>
+          <div class="status-item">接口数: <span class="value" id="ts-interface-count">0</span></div>
           <div class="status-message" id="ts-message"></div>
         </div>
       </div>
@@ -690,7 +761,7 @@
   </div>
 
   <script>
-    /* 主题切换 */
+    /* ========== 主题 ========== */
     function toggleTheme() {
       const cur = document.documentElement.getAttribute('data-theme');
       document.documentElement.setAttribute('data-theme', cur === 'dark' ? 'light' : 'dark');
@@ -699,7 +770,7 @@
       document.documentElement.setAttribute('data-theme', 'dark');
     }
 
-    /* 工具切换 */
+    /* ========== 工具切换 ========== */
     function switchTool(toolId) {
       document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
       document.querySelectorAll('.tool-page').forEach(p => p.classList.remove('active'));
@@ -707,7 +778,7 @@
       document.getElementById('page-' + toolId).classList.add('active');
     }
 
-    /* 通用函数 */
+    /* ========== 通用辅助函数 ========== */
     function showMessage(elId, text, type) {
       const el = document.getElementById(elId);
       el.textContent = text;
@@ -720,7 +791,29 @@
       }
     }
 
-    /* JSON 工具 */
+    function setActiveAction(toolPrefix, action) {
+      document.querySelectorAll(`#page-${toolPrefix} .action`).forEach(btn => {
+        const baseText = btn.textContent.replace(/^▶\s*/, '');
+        if (btn.dataset.action === action) {
+          btn.classList.add('primary');
+          btn.textContent = '▶ ' + baseText;
+        } else {
+          btn.classList.remove('primary');
+          btn.textContent = baseText;
+        }
+      });
+    }
+
+    function copyToClipboard(text, msgId) {
+      if (!text) { showMessage(msgId, '// 没有可复制的内容', 'error'); return; }
+      navigator.clipboard.writeText(text).then(() => {
+        showMessage(msgId, '// 已复制', 'success');
+      }).catch(() => {
+        showMessage(msgId, '// 复制失败', 'error');
+      });
+    }
+
+    /* ========== JSON 工具 ========== */
     const jsonInput = document.getElementById('json-input');
     const jsonOutput = document.getElementById('json-output');
 
@@ -754,16 +847,6 @@
     }
 
     jsonInput.addEventListener('input', () => jsonUpdateStatus(jsonInput.value));
-
-    /* 设置当前激活的操作按钮 */
-    function setActiveAction(toolPrefix, action) {
-      document.querySelectorAll(`#page-${toolPrefix} .action`).forEach(btn => {
-        btn.classList.toggle('primary', btn.dataset.action === action);
-        // 主按钮带 "▶" 前缀
-        const baseText = btn.textContent.replace(/^▶\s*/, '');
-        btn.textContent = btn.dataset.action === action ? '▶ ' + baseText : baseText;
-      });
-    }
 
     function jsonFormat() {
       const text = jsonInput.value.trim();
@@ -804,12 +887,7 @@
       }
     }
 
-    function jsonCopy() {
-      if (!jsonOutput.value) return showMessage('json-message', '// 没有可复制的内容', 'error');
-      navigator.clipboard.writeText(jsonOutput.value).then(() => {
-        showMessage('json-message', '// 已复制', 'success');
-      });
-    }
+    function jsonCopy() { copyToClipboard(jsonOutput.value, 'json-message'); }
 
     function jsonExample() {
       jsonInput.value = '{"name":"张三","age":30,"isStudent":false,"hobbies":["读书","跑步","编程"],"address":{"city":"北京","zip":"100000"}}';
@@ -822,11 +900,11 @@
       jsonInput.value = '';
       jsonOutput.value = '';
       jsonUpdateStatus('');
-      setActiveAction('json', 'format');  // 清空后回到"格式化"默认状态
+      setActiveAction('json', 'format');
       showMessage('json-message', '', '');
     }
 
-    /* 时间戳工具 */
+    /* ========== 时间戳工具 ========== */
     let tsToDateUnit = 's';
 
     function padZero(n) { return String(n).padStart(2, '0'); }
@@ -920,10 +998,7 @@
 
     function tsCopyValue(id) {
       const val = document.getElementById(id).value;
-      if (!val) return showMessage('ts-message', '// 没有可复制的内容', 'error');
-      navigator.clipboard.writeText(val).then(() => {
-        showMessage('ts-message', '// 已复制: ' + val, 'success');
-      });
+      copyToClipboard(val, 'ts-message');
     }
 
     function updateNowDisplay() {
@@ -934,6 +1009,294 @@
     }
     setInterval(updateNowDisplay, 1000);
     updateNowDisplay();
+
+    /* ========== Base64 工具 ========== */
+    const b64In = document.getElementById('base64-input');
+    const b64Out = document.getElementById('base64-output');
+
+    function updateBase64Status() {
+      document.getElementById('base64-in-len').textContent = b64In.value.length;
+      document.getElementById('base64-out-len').textContent = b64Out.value.length;
+    }
+    b64In.addEventListener('input', updateBase64Status);
+
+    // 中文安全的 Base64 编码: 先用 TextEncoder 转 UTF-8 字节,再 btoa
+    function utf8ToBase64(str) {
+      const bytes = new TextEncoder().encode(str);
+      let binary = '';
+      bytes.forEach(b => binary += String.fromCharCode(b));
+      return btoa(binary);
+    }
+
+    // 中文安全的 Base64 解码
+    function base64ToUtf8(b64) {
+      const binary = atob(b64);
+      const bytes = new Uint8Array(binary.length);
+      for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+      return new TextDecoder().decode(bytes);
+    }
+
+    function base64Encode() {
+      const text = b64In.value;
+      if (!text) return showMessage('base64-message', '// 请先输入内容', 'error');
+      try {
+        let result = utf8ToBase64(text);
+        if (document.getElementById('base64-url-safe').checked) {
+          result = result.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+        }
+        b64Out.value = result;
+        document.getElementById('base64-status').textContent = '已编码';
+        setActiveAction('base64', 'encode');
+        updateBase64Status();
+        showMessage('base64-message', '// 编码成功', 'success');
+      } catch (e) {
+        showMessage('base64-message', '// 错误: ' + e.message, 'error');
+      }
+    }
+
+    function base64Decode() {
+      let text = b64In.value.trim();
+      if (!text) return showMessage('base64-message', '// 请先输入内容', 'error');
+      try {
+        // 处理 URL 安全模式
+        text = text.replace(/-/g, '+').replace(/_/g, '/');
+        // 补齐 padding
+        while (text.length % 4 !== 0) text += '=';
+        const result = base64ToUtf8(text);
+        b64Out.value = result;
+        document.getElementById('base64-status').textContent = '已解码';
+        setActiveAction('base64', 'decode');
+        updateBase64Status();
+        showMessage('base64-message', '// 解码成功', 'success');
+      } catch (e) {
+        b64Out.value = '';
+        showMessage('base64-message', '// 解码失败:不是合法的 Base64', 'error');
+        document.getElementById('base64-status').textContent = '错误';
+      }
+    }
+
+    function base64Copy() { copyToClipboard(b64Out.value, 'base64-message'); }
+
+    function base64Clear() {
+      b64In.value = '';
+      b64Out.value = '';
+      document.getElementById('base64-status').textContent = '空闲';
+      updateBase64Status();
+      setActiveAction('base64', 'encode');
+      showMessage('base64-message', '', '');
+    }
+
+    /* ========== URL 编码工具 ========== */
+    const urlIn = document.getElementById('url-input');
+    const urlOut = document.getElementById('url-output');
+
+    function updateUrlStatus() {
+      document.getElementById('url-in-len').textContent = urlIn.value.length;
+      document.getElementById('url-out-len').textContent = urlOut.value.length;
+    }
+    urlIn.addEventListener('input', updateUrlStatus);
+
+    function urlEncode() {
+      const text = urlIn.value;
+      if (!text) return showMessage('url-message', '// 请先输入内容', 'error');
+      try {
+        const strict = document.getElementById('url-component-mode').checked;
+        urlOut.value = strict ? encodeURIComponent(text) : encodeURI(text);
+        document.getElementById('url-status').textContent = '已编码';
+        setActiveAction('url', 'encode');
+        updateUrlStatus();
+        showMessage('url-message', '// 编码成功', 'success');
+      } catch (e) {
+        showMessage('url-message', '// 错误: ' + e.message, 'error');
+      }
+    }
+
+    function urlDecode() {
+      const text = urlIn.value;
+      if (!text) return showMessage('url-message', '// 请先输入内容', 'error');
+      try {
+        const strict = document.getElementById('url-component-mode').checked;
+        urlOut.value = strict ? decodeURIComponent(text) : decodeURI(text);
+        document.getElementById('url-status').textContent = '已解码';
+        setActiveAction('url', 'decode');
+        updateUrlStatus();
+        showMessage('url-message', '// 解码成功', 'success');
+      } catch (e) {
+        urlOut.value = '';
+        showMessage('url-message', '// 解码失败:URL 编码格式错误', 'error');
+        document.getElementById('url-status').textContent = '错误';
+      }
+    }
+
+    function urlCopy() { copyToClipboard(urlOut.value, 'url-message'); }
+
+    function urlClear() {
+      urlIn.value = '';
+      urlOut.value = '';
+      document.getElementById('url-status').textContent = '空闲';
+      updateUrlStatus();
+      setActiveAction('url', 'encode');
+      showMessage('url-message', '', '');
+    }
+
+    /* ========== JSON 转 TypeScript ========== */
+    const tsIn = document.getElementById('ts-input');
+    const tsOut = document.getElementById('ts-output');
+
+    // 推断值的 TS 类型
+    function inferType(value, key, interfaces, exportMode) {
+      if (value === null) return 'null';
+      if (Array.isArray(value)) {
+        if (value.length === 0) return 'any[]';
+        // 数组里所有元素的类型集合
+        const elementTypes = new Set();
+        const objectsInArray = [];
+        value.forEach(item => {
+          if (item !== null && typeof item === 'object' && !Array.isArray(item)) {
+            objectsInArray.push(item);
+          } else {
+            elementTypes.add(inferType(item, key, interfaces, exportMode));
+          }
+        });
+        if (objectsInArray.length > 0) {
+          // 合并所有数组对象的字段
+          const merged = mergeObjects(objectsInArray);
+          const interfaceName = capitalize(singularize(key));
+          buildInterface(interfaceName, merged, interfaces, exportMode);
+          elementTypes.add(interfaceName);
+        }
+        const types = Array.from(elementTypes);
+        if (types.length === 1) return types[0] + '[]';
+        return '(' + types.join(' | ') + ')[]';
+      }
+      if (typeof value === 'object') {
+        const interfaceName = capitalize(key);
+        buildInterface(interfaceName, value, interfaces, exportMode);
+        return interfaceName;
+      }
+      if (typeof value === 'string') return 'string';
+      if (typeof value === 'number') return 'number';
+      if (typeof value === 'boolean') return 'boolean';
+      return 'any';
+    }
+
+    // 合并多个对象的字段(用于数组中对象类型推断)
+    function mergeObjects(objs) {
+      const allKeys = new Set();
+      objs.forEach(obj => Object.keys(obj).forEach(k => allKeys.add(k)));
+      const merged = {};
+      allKeys.forEach(k => {
+        const sample = objs.find(o => o[k] !== undefined);
+        merged[k] = sample[k];
+      });
+      return merged;
+    }
+
+    // 构建一个 interface
+    function buildInterface(name, obj, interfaces, exportMode) {
+      if (interfaces[name]) return; // 避免重复
+      interfaces[name] = null; // 占位,防止循环引用
+      const lines = [];
+      const prefix = exportMode ? 'export interface' : 'interface';
+      lines.push(`${prefix} ${name} {`);
+      Object.entries(obj).forEach(([k, v]) => {
+        const safeKey = /^[a-zA-Z_$][a-zA-Z0-9_$]*$/.test(k) ? k : `"${k}"`;
+        const type = inferType(v, k, interfaces, exportMode);
+        lines.push(`  ${safeKey}: ${type};`);
+      });
+      lines.push('}');
+      interfaces[name] = lines.join('\n');
+    }
+
+    // 首字母大写
+    function capitalize(s) {
+      if (!s) return 'Item';
+      return s.charAt(0).toUpperCase() + s.slice(1);
+    }
+
+    // 单数化(粗略,适用于英文常见情况)
+    function singularize(s) {
+      if (s.endsWith('ies')) return s.slice(0, -3) + 'y';
+      if (s.endsWith('es')) return s.slice(0, -2);
+      if (s.endsWith('s') && !s.endsWith('ss')) return s.slice(0, -1);
+      return s + 'Item';
+    }
+
+    function jsonToTs() {
+      const text = tsIn.value.trim();
+      if (!text) return showMessage('ts-message', '// 请先输入 JSON', 'error');
+      let rootName = document.getElementById('ts-root-name').value.trim() || 'RootObject';
+      // 类型名只允许字母数字下划线
+      rootName = rootName.replace(/[^a-zA-Z0-9_$]/g, '');
+      if (!rootName) rootName = 'RootObject';
+      const exportMode = document.getElementById('ts-export-mode').checked;
+
+      try {
+        const parsed = JSON.parse(text);
+        if (typeof parsed !== 'object' || parsed === null) {
+          tsOut.value = '// 顶级必须是对象或数组';
+          showMessage('ts-message', '// 顶级必须是对象或数组', 'error');
+          return;
+        }
+        const interfaces = {};
+        if (Array.isArray(parsed)) {
+          // 顶层是数组
+          inferType(parsed, rootName, interfaces, exportMode);
+          // 因为顶层是数组,需要把根接口包装一下
+          const elementType = inferType(parsed, rootName, interfaces, exportMode);
+          const prefix = exportMode ? 'export type' : 'type';
+          interfaces[rootName + 'Array'] = `${prefix} ${rootName}Array = ${elementType};`;
+        } else {
+          buildInterface(rootName, parsed, interfaces, exportMode);
+        }
+        // 按依赖顺序输出(先定义的子接口在前,根接口在后)
+        const names = Object.keys(interfaces);
+        // 根接口放最后
+        const rootIdx = names.indexOf(rootName);
+        if (rootIdx >= 0) {
+          names.splice(rootIdx, 1);
+          names.push(rootName);
+        }
+        const output = names.map(n => interfaces[n]).join('\n\n');
+        tsOut.value = output;
+        document.getElementById('ts-status-bar').textContent = '成功';
+        document.getElementById('ts-interface-count').textContent = names.length;
+        showMessage('ts-message', `// 已生成 ${names.length} 个类型`, 'success');
+      } catch (e) {
+        tsOut.value = '';
+        document.getElementById('ts-status-bar').textContent = '错误';
+        showMessage('ts-message', '// JSON 解析错误: ' + e.message, 'error');
+      }
+    }
+
+    function jsonToTsCopy() { copyToClipboard(tsOut.value, 'ts-message'); }
+
+    function jsonToTsExample() {
+      tsIn.value = JSON.stringify({
+        id: 1,
+        name: "张三",
+        email: "zhangsan@example.com",
+        isActive: true,
+        profile: {
+          age: 30,
+          city: "北京",
+          tags: ["developer", "designer"]
+        },
+        posts: [
+          { id: 101, title: "Hello", views: 200 },
+          { id: 102, title: "World", views: 350 }
+        ]
+      }, null, 2);
+      showMessage('ts-message', '// 已加载示例', 'success');
+    }
+
+    function jsonToTsClear() {
+      tsIn.value = '';
+      tsOut.value = '';
+      document.getElementById('ts-status-bar').textContent = '空闲';
+      document.getElementById('ts-interface-count').textContent = '0';
+      showMessage('ts-message', '', '');
+    }
   </script>
 </body>
 </html>
