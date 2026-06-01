@@ -7,68 +7,96 @@
   <meta name="description" content="MatTools 开发者工具集,提供 JSON 格式化、Base64 编解码、URL 编码、JSON 转 TypeScript、时间戳转换等实用工具。数据全部在浏览器本地处理,免费、安全、无广告。">
   <meta name="keywords" content="JSON格式化,Base64编码,URL编码,JSON转TypeScript,时间戳转换,在线开发者工具">
   
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'%3E%3Crect width='60' height='60' fill='%23000'/%3E%3Ctext x='15' y='27' font-family='monospace' font-size='22' font-weight='700' fill='%23fff' text-anchor='middle'%3EM%3C/text%3E%3Ctext x='45' y='27' font-family='monospace' font-size='22' font-weight='700' fill='%23ff6600' text-anchor='middle'%3EA%3C/text%3E%3Ctext x='15' y='53' font-family='monospace' font-size='22' font-weight='700' fill='%23ff6600' text-anchor='middle'%3ET%3C/text%3E%3Ctext x='45' y='53' font-family='monospace' font-size='22' font-weight='700' fill='%23fff' text-anchor='middle'%3ET%3C/text%3E%3C/svg%3E">
-  
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'%3E%3Crect width='60' height='60' rx='14' fill='%23000'/%3E%3Ctext x='15' y='27' font-family='monospace' font-size='22' font-weight='700' fill='%23fff' text-anchor='middle'%3EM%3C/text%3E%3Ctext x='45' y='27' font-family='monospace' font-size='22' font-weight='700' fill='%23ff6600' text-anchor='middle'%3EA%3C/text%3E%3Ctext x='15' y='53' font-family='monospace' font-size='22' font-weight='700' fill='%23ff6600' text-anchor='middle'%3ET%3C/text%3E%3Ctext x='45' y='53' font-family='monospace' font-size='22' font-weight='700' fill='%23fff' text-anchor='middle'%3ET%3C/text%3E%3C/svg%3E">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
   <style>
     :root {
-      --bg-page: #ffffff;
+      /* ===== 明亮干净现代 · 单一橙色强调 ===== */
+      --bg-page: #f6f6f5;
       --bg-panel: #ffffff;
       --bg-output: #fafafa;
-      --bg-button-primary: #000000;
-      --bg-button-primary-hover: #1a1a1a;
-      --text-primary: #000000;
-      --text-secondary: #666666;
-      --text-tertiary: #999999;
-      --border-strong: #000000;
-      --border-soft: #d4d4d4;
-      --tab-active-bg: #000000;
+      --bg-button-primary: #ff6600;
+      --bg-button-primary-hover: #ea5c00;
+      --text-primary: #18181b;
+      --text-secondary: #52525b;
+      --text-tertiary: #a1a1aa;
+      --border-strong: #d4d4d8;
+      --border-soft: #ededec;
+      --border-hairline: #f3f3f2;
+      --tab-active-bg: #18181b;
       --tab-active-text: #ffffff;
       --button-primary-text: #ffffff;
-      --logo-bg: #000000;
+      --logo-bg: #18181b;
       --logo-text: #ffffff;
+      --logo-accent: #ff6600;
       --brand-accent: #ff6600;
+      --accent-2: #0d9488;
+      --accent-ring: rgba(255,102,0,.16);
+      --accent-soft: rgba(255,102,0,.09);
+      --shadow-card: 0 1px 2px rgba(24,24,27,.04), 0 1px 3px rgba(24,24,27,.05);
+      --shadow-sm: 0 1px 2px rgba(24,24,27,.05);
+      --shadow-pop: 0 10px 28px -10px rgba(24,24,27,.18);
+      --radius: 16px;
+      --radius-sm: 10px;
+      --font-ui: 'Manrope', -apple-system, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', 'SF Mono', Monaco, Consolas, 'Courier New', monospace;
+      --font-display: 'Manrope', -apple-system, 'PingFang SC', sans-serif;
     }
 
     [data-theme="dark"] {
-      --bg-page: #0a0a0a;
-      --bg-panel: #111111;
-      --bg-output: #0d0d0d;
-      --bg-button-primary: #ffffff;
-      --bg-button-primary-hover: #e5e5e5;
-      --text-primary: #ffffff;
-      --text-secondary: #999999;
-      --text-tertiary: #666666;
-      --border-strong: #ffffff;
-      --border-soft: #333333;
-      --tab-active-bg: #ffffff;
-      --tab-active-text: #000000;
-      --button-primary-text: #000000;
-      --logo-bg: #ffffff;
-      --logo-text: #000000;
-      --brand-accent: #ff8533;
+      --bg-page: #0a0a0c;
+      --bg-panel: #161618;
+      --bg-output: #1c1c1f;
+      --bg-button-primary: #ff7a2a;
+      --bg-button-primary-hover: #ff8c45;
+      --text-primary: #fafafa;
+      --text-secondary: #a1a1aa;
+      --text-tertiary: #6b6b73;
+      --border-strong: #3f3f46;
+      --border-soft: #27272a;
+      --border-hairline: #202023;
+      --tab-active-bg: #fafafa;
+      --tab-active-text: #18181b;
+      --button-primary-text: #ffffff;
+      --logo-bg: #fafafa;
+      --logo-text: #18181b;
+      --logo-accent: #ff7a2a;
+      --brand-accent: #ff7a2a;
+      --accent-2: #2dd4bf;
+      --accent-ring: rgba(255,122,42,.22);
+      --accent-soft: rgba(255,122,42,.12);
+      --shadow-card: 0 1px 2px rgba(0,0,0,.5), 0 1px 3px rgba(0,0,0,.4);
+      --shadow-sm: 0 1px 2px rgba(0,0,0,.4);
+      --shadow-pop: 0 12px 32px -12px rgba(0,0,0,.7);
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      font-family: 'SF Mono', Monaco, Consolas, 'Courier New', 'PingFang SC', 'Microsoft YaHei', monospace;
+      font-family: var(--font-ui);
       background: var(--bg-page);
       color: var(--text-primary);
       min-height: 100vh;
-      padding: 24px;
+      padding: 0 0 64px;
       -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
       transition: background 0.2s, color 0.2s;
     }
 
-    .container { max-width: 1280px; margin: 0 auto; }
+    .container { max-width: 1240px; margin: 0 auto; }
 
     /* ===== 顶部条 ===== */
     .header {
       display: flex;
       align-items: center;
-      gap: 12px;
-      margin-bottom: 16px;
-      padding: 4px;
+      gap: 14px;
+      margin-bottom: 18px;
+      padding: 0 2px 14px;
+      border-bottom: 1px solid var(--border-soft);
     }
 
     /* 顶部 Logo + 品牌名 */
@@ -80,13 +108,15 @@
     }
 
     .header-title {
-      font-size: 18px;
-      font-weight: 700;
-      letter-spacing: -0.3px;
-      line-height: 1;
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      text-transform: uppercase;
+      line-height: .85;
     }
 
-    .header-title .matt { color: var(--brand-accent); }
+    .header-title .matt { color: var(--logo-accent); }
     .header-title .ools { color: var(--text-primary); }
 
     /* 顶部分隔竖线 */
@@ -107,19 +137,19 @@
 
     /* 顶部图标按钮(收起 + 主题) */
     .icon-btn {
-      width: 36px; height: 36px;
-      border: 1.5px solid var(--border-strong);
+      width: 38px; height: 38px;
+      border: 1px solid var(--border-soft);
       background: var(--bg-panel);
-      border-radius: 0;
+      border-radius: var(--radius-sm);
       cursor: pointer;
       display: flex; align-items: center; justify-content: center;
-      color: var(--text-primary);
+      color: var(--text-secondary);
       padding: 0;
-      transition: background 0.15s;
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
       flex-shrink: 0;
     }
 
-    .icon-btn:hover { background: var(--bg-output); }
+    .icon-btn:hover { background: var(--bg-output); color: var(--text-primary); border-color: var(--text-tertiary); }
     .icon-btn svg { width: 16px; height: 16px; }
     .icon-btn .icon-sun { display: none; }
     .icon-btn .icon-moon { display: block; }
@@ -129,16 +159,19 @@
     /* ===== 左右分栏布局 ===== */
     .layout {
       display: flex;
-      border: 1.5px solid var(--border-strong);
+      border: 1px solid var(--border-soft);
       background: var(--bg-panel);
       min-height: 600px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-card);
+      overflow: hidden;
     }
 
     /* ===== 左侧边栏 ===== */
     .sidebar {
-      width: 152px;
+      width: 184px;
       flex-shrink: 0;
-      border-right: 1.5px solid var(--border-strong);
+      border-right: 1px solid var(--border-soft);
       display: flex;
       flex-direction: column;
       background: var(--bg-panel);
@@ -156,20 +189,23 @@
       grid-template-columns: 1fr 1fr;
       grid-template-rows: 1fr 1fr;
       color: var(--logo-text);
+      font-family: var(--font-mono);
       font-weight: 700;
       font-size: 15px;
       align-items: center;
       justify-items: center;
       flex-shrink: 0;
+      border-radius: 4px;
+      overflow: hidden;
     }
 
     .logo-mark span { line-height: 1; }
     .logo-mark span:nth-child(2),
-    .logo-mark span:nth-child(3) { color: var(--brand-accent); }
+    .logo-mark span:nth-child(3) { color: var(--logo-accent); }
 
     /* 侧边栏顶栏:收起按钮,高度与右侧 panel-top 对齐 */
     .sidebar-head {
-      border-bottom: 1.5px solid var(--border-strong);
+      border-bottom: 1px solid var(--border-soft);
       padding: 0 8px;
       display: flex;
       align-items: center;
@@ -205,47 +241,59 @@
 
     /* 父级分类标题:橙色加粗,和功能项明显区分 */
     .nav-group-label {
-      font-size: 11px;
+      font-size: 9.5px;
       font-weight: 700;
-      color: var(--brand-accent);
-      letter-spacing: 0.3px;
-      padding: 14px 14px 6px;
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 1.4px;
+      padding: 16px 16px 6px;
+      border-bottom: 1px solid var(--border-soft);
     }
 
     .nav-item {
-      padding: 8px 14px;
-      font-size: 12px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 11px 16px;
+      font-size: 12.5px;
+      border-bottom: 1px solid var(--border-soft);
       color: var(--text-secondary);
       cursor: pointer;
-      transition: color 0.15s ease, background 0.15s ease, padding-left 0.15s ease, border-left-color 0.15s ease;
-      border-left: 3px solid transparent;
+      transition: color 0.12s, background 0.12s;
       user-select: none;
       white-space: nowrap;
+    }
+
+    .nav-item::before {
+      content: "";
+      width: 7px; height: 7px;
+      border: 1.5px solid var(--text-tertiary);
+      flex-shrink: 0;
+      transition: .12s;
     }
 
     .nav-item:hover {
       color: var(--text-primary);
       background: var(--bg-output);
-      padding-left: 20px;
-      border-left-color: var(--border-soft);
     }
 
     .nav-item.active {
-      color: var(--text-primary);
-      background: var(--bg-output);
-      border-left-color: var(--brand-accent);
+      color: var(--tab-active-text);
+      background: var(--tab-active-bg);
       font-weight: 700;
     }
 
-    .nav-item.active:hover {
-      border-left-color: var(--brand-accent);
+    .nav-item.active::before {
+      background: var(--brand-accent);
+      border-color: var(--brand-accent);
     }
 
     /* 收起后的展开条 */
     .sidebar-rail {
       width: 24px;
       flex-shrink: 0;
-      border-right: 1.5px solid var(--border-strong);
+      border-right: 1px solid var(--border-soft);
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -271,58 +319,65 @@
     }
 
     .panel-top {
-      padding: 14px 20px;
-      border-bottom: 1.5px solid var(--border-strong);
-      min-height: 49px;
+      padding: 16px 24px;
+      border-bottom: 1px solid var(--border-soft);
+      min-height: 56px;
       box-sizing: border-box;
       display: flex;
       align-items: center;
     }
 
     .current-tool-name {
-      font-size: 15px;
+      font-family: var(--font-display);
+      font-size: 17px;
       font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: -0.5px;
       color: var(--text-primary);
     }
 
     .toolbar {
-      padding: 14px 20px;
-      border-bottom: 1.5px solid var(--border-strong);
+      padding: 14px 24px;
+      border-bottom: 1px solid var(--border-soft);
       display: flex;
-      gap: 8px;
+      gap: 9px;
       align-items: center;
       flex-wrap: wrap;
     }
 
     button {
-      padding: 7px 14px;
+      padding: 8px 16px;
       background: var(--bg-panel);
       color: var(--text-primary);
-      border: 1.5px solid var(--border-strong);
-      font-size: 11px;
+      border: 1px solid var(--border-soft);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .3px;
       cursor: pointer;
       font-family: inherit;
       border-radius: 0;
-      transition: all 0.15s;
+      transition: background 0.12s, color 0.12s;
     }
 
-    button:hover { background: var(--bg-output); }
+    button:hover { background: var(--border-strong); color: var(--bg-panel); }
 
     button.primary {
       background: var(--bg-button-primary);
       color: var(--button-primary-text);
-      border-color: var(--border-strong);
+      border-color: var(--bg-button-primary);
     }
 
-    button.primary:hover { background: var(--bg-button-primary-hover); }
+    button.primary:hover { background: var(--bg-button-primary-hover); border-color: var(--bg-button-primary-hover); color: var(--button-primary-text); }
 
     button.text-only {
       border: 1.5px solid var(--border-soft);
+      background: transparent;
       color: var(--text-secondary);
     }
 
     button.text-only:hover {
-      color: var(--text-primary);
+      color: var(--bg-panel);
+      background: var(--border-strong);
       border-color: var(--border-strong);
     }
 
@@ -342,18 +397,20 @@
       .editor-wrapper { grid-template-columns: 1fr; }
       .editor-panel:first-child {
         border-right: none;
-        border-bottom: 1.5px solid var(--border-strong);
+        border-bottom: 1px solid var(--border-soft);
       }
     }
 
     .editor-panel { display: flex; flex-direction: column; }
-    .editor-panel:first-child { border-right: 1.5px solid var(--border-strong); }
+    .editor-panel:first-child { border-right: 1px solid var(--border-soft); }
 
     .panel-header {
-      padding: 12px 20px 6px;
+      padding: 16px 26px 8px;
       font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
       color: var(--text-tertiary);
-      letter-spacing: 0.5px;
+      letter-spacing: 1px;
     }
 
     .panel-header.output-header { background: var(--bg-output); }
@@ -361,12 +418,12 @@
     textarea {
       flex: 1;
       width: 100%;
-      padding: 4px 20px 20px;
+      padding: 6px 26px 24px;
       border: none;
       resize: none;
-      font-family: 'SF Mono', Monaco, Consolas, monospace;
-      font-size: 12px;
-      line-height: 1.7;
+      font-family: var(--font-mono);
+      font-size: 12.5px;
+      line-height: 1.75;
       outline: none;
       background: var(--bg-panel);
       color: var(--text-primary);
@@ -378,10 +435,10 @@
 
     /* ===== 选项栏（用于 Base64/URL 的选项 + 类型名输入） ===== */
     .options-bar {
-      padding: 10px 20px;
-      border-bottom: 1.5px solid var(--border-soft);
+      padding: 12px 26px;
+      border-bottom: 1px solid var(--border-soft);
       display: flex;
-      gap: 16px;
+      gap: 18px;
       align-items: center;
       flex-wrap: wrap;
       background: var(--bg-output);
@@ -401,18 +458,19 @@
     }
 
     .inline-input {
-      padding: 5px 10px;
-      border: 1.5px solid var(--border-soft);
+      padding: 6px 11px;
+      border: 1px solid var(--border-soft);
       background: var(--bg-panel);
       color: var(--text-primary);
-      font-family: inherit;
+      font-family: var(--font-mono);
       font-size: 11px;
       outline: none;
-      border-radius: 0;
+      border-radius: var(--radius-sm);
       width: 150px;
+      transition: border-color 0.15s, box-shadow 0.15s;
     }
 
-    .inline-input:focus { border-color: var(--border-strong); }
+    .inline-input:focus { border-color: var(--brand-accent); box-shadow: 0 0 0 3px var(--accent-ring); }
 
     /* 自定义复选框样式 */
     .checkbox-wrapper {
@@ -431,11 +489,13 @@
     }
 
     /* ===== 时间戳工具样式 ===== */
-    .timestamp-tool { padding: 24px; }
+    .timestamp-tool { padding: 28px; }
 
     .ts-section {
-      border: 1.5px solid var(--border-strong);
+      border: 1px solid var(--border-soft);
       margin-bottom: 20px;
+      border-radius: var(--radius-sm);
+      overflow: hidden;
     }
 
     .ts-section:last-child { margin-bottom: 0; }
@@ -443,7 +503,7 @@
     .ts-section-header {
       padding: 10px 16px;
       background: var(--bg-output);
-      border-bottom: 1.5px solid var(--border-strong);
+      border-bottom: 1px solid var(--border-soft);
       font-size: 11px;
       letter-spacing: 0.5px;
       color: var(--text-primary);
@@ -478,17 +538,18 @@
 
     .ts-input {
       width: 100%;
-      padding: 8px 12px;
-      border: 1.5px solid var(--border-soft);
+      padding: 9px 12px;
+      border: 1px solid var(--border-soft);
       background: var(--bg-panel);
       color: var(--text-primary);
-      font-family: inherit;
+      font-family: var(--font-mono);
       font-size: 12px;
       outline: none;
-      border-radius: 0;
+      border-radius: var(--radius-sm);
+      transition: border-color 0.15s, box-shadow 0.15s;
     }
 
-    .ts-input:focus { border-color: var(--border-strong); }
+    .ts-input:focus { border-color: var(--brand-accent); box-shadow: 0 0 0 3px var(--accent-ring); }
     .ts-input[readonly] {
       background: var(--bg-output);
       color: var(--text-secondary);
@@ -497,20 +558,31 @@
     .ts-unit-toggle {
       display: flex;
       gap: 0;
-      border: 1.5px solid var(--border-strong);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
     }
 
     .ts-unit-toggle button {
       padding: 6px 12px;
       border: none;
+      border-radius: 0;
       background: var(--bg-panel);
       font-size: 11px;
       color: var(--text-secondary);
       cursor: pointer;
+      box-shadow: none;
+    }
+
+    .ts-unit-toggle button:hover {
+      transform: none;
+      box-shadow: none;
+      background: var(--bg-output);
+      color: var(--text-primary);
     }
 
     .ts-unit-toggle button + button {
-      border-left: 1.5px solid var(--border-strong);
+      border-left: 1px solid var(--border-soft);
     }
 
     .ts-unit-toggle button.active {
@@ -520,7 +592,7 @@
 
     .ts-current {
       background: var(--bg-output);
-      border-top: 1.5px solid var(--border-strong);
+      border-top: 1px solid var(--border-soft);
       padding: 12px 16px;
       display: grid;
       grid-template-columns: auto 1fr auto 1fr;
@@ -545,8 +617,10 @@
 
     /* ===== 状态栏 ===== */
     .status-bar {
-      padding: 8px 20px;
-      border-top: 1.5px solid var(--border-strong);
+      padding: 11px 26px;
+      border-top: 1px solid var(--border-soft);
+      background: var(--bg-output);
+      font-family: var(--font-mono);
       font-size: 10px;
       color: var(--text-secondary);
       display: flex;
@@ -566,10 +640,12 @@
 
     footer {
       text-align: center;
-      margin-top: 20px;
+      margin-top: 28px;
       font-size: 11px;
       color: var(--text-tertiary);
     }
+
+    footer .footer-brand { font-family: var(--font-mono); }
 
     footer .footer-brand .matt {
       color: var(--brand-accent);
@@ -591,14 +667,14 @@
       .case-tool { grid-template-columns: 1fr; }
       .case-input-section {
         border-right: none;
-        border-bottom: 1.5px solid var(--border-strong);
+        border-bottom: 1px solid var(--border-soft);
       }
     }
 
     .case-input-section {
       display: flex;
       flex-direction: column;
-      border-right: 1.5px solid var(--border-strong);
+      border-right: 1px solid var(--border-soft);
     }
 
     .case-textarea {
@@ -607,7 +683,7 @@
       padding: 4px 20px 20px;
       border: none;
       resize: none;
-      font-family: 'SF Mono', Monaco, Consolas, monospace;
+      font-family: var(--font-mono);
       font-size: 12px;
       line-height: 1.7;
       outline: none;
@@ -642,7 +718,7 @@
     }
 
     .case-result-value {
-      font-family: 'SF Mono', Monaco, Consolas, monospace;
+      font-family: var(--font-mono);
       font-size: 12px;
       color: var(--text-primary);
       word-break: break-all;
@@ -712,7 +788,7 @@
       }
       .editor-panel:first-child {
         border-right: none;
-        border-bottom: 1.5px solid var(--border-strong);
+        border-bottom: 1px solid var(--border-soft);
       }
       textarea { min-height: 200px; }
 
@@ -741,7 +817,7 @@
       .case-tool { grid-template-columns: 1fr; }
       .case-input-section {
         border-right: none;
-        border-bottom: 1.5px solid var(--border-strong);
+        border-bottom: 1px solid var(--border-soft);
       }
       .case-textarea { min-height: 160px; padding: 4px 14px 14px; }
       .case-result-row { padding: 8px 14px; }
@@ -761,7 +837,7 @@
     /* ========== 新增工具的通用样式 ========== */
     /* ============================================ */
 
-    .generic-tool { padding: 20px; }
+    .generic-tool { padding: 28px; }
 
     @media (max-width: 600px) { .generic-tool { padding: 14px; } }
 
@@ -780,9 +856,10 @@
     }
 
     .cron-field-box {
-      border: 1.5px solid var(--border-soft);
-      padding: 10px;
+      border: 1px solid var(--border-soft);
+      padding: 12px 10px;
       text-align: center;
+      border-radius: var(--radius-sm);
     }
 
     .cron-field-name {
@@ -804,8 +881,10 @@
     }
 
     .cron-section {
-      border: 1.5px solid var(--border-strong);
+      border: 1px solid var(--border-soft);
       margin-bottom: 14px;
+      border-radius: var(--radius-sm);
+      overflow: hidden;
     }
 
     .cron-section:last-child { margin-bottom: 0; }
@@ -813,7 +892,7 @@
     .cron-section-title {
       padding: 8px 14px;
       background: var(--bg-output);
-      border-bottom: 1.5px solid var(--border-strong);
+      border-bottom: 1px solid var(--border-soft);
       font-size: 11px;
       color: var(--text-primary);
     }
@@ -826,7 +905,7 @@
       word-break: break-word;
     }
 
-    .cron-next div { font-family: 'SF Mono', Monaco, monospace; }
+    .cron-next div { font-family: var(--font-mono); }
 
     .cron-presets {
       padding: 12px 14px;
@@ -839,17 +918,20 @@
       cursor: pointer;
       font-size: 11px;
       color: var(--text-secondary);
-      padding: 6px 8px;
-      border: 1.5px solid var(--border-soft);
+      padding: 8px 10px;
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-sm);
       transition: all 0.15s;
     }
 
     .cron-preset-item:hover {
-      border-color: var(--border-strong);
+      border-color: var(--brand-accent);
+      background: var(--bg-output);
       color: var(--text-primary);
     }
 
     .cron-preset-item code {
+      font-family: var(--font-mono);
       color: var(--brand-accent);
       font-weight: 700;
       margin-right: 8px;
@@ -880,12 +962,12 @@
 
     /* --- 文本对比 --- */
     .diff-result-wrap {
-      border-top: 1.5px solid var(--border-strong);
+      border-top: 1px solid var(--border-soft);
     }
 
     .diff-result {
       padding: 14px 20px;
-      font-family: 'SF Mono', Monaco, monospace;
+      font-family: var(--font-mono);
       font-size: 12px;
       line-height: 1.7;
       background: var(--bg-output);
@@ -927,23 +1009,25 @@
     .regex-textarea {
       width: 100%;
       min-height: 140px;
-      padding: 12px;
-      border: 1.5px solid var(--border-soft);
+      padding: 14px;
+      border: 1px solid var(--border-soft);
       background: var(--bg-panel);
       color: var(--text-primary);
-      font-family: 'SF Mono', Monaco, monospace;
+      font-family: var(--font-mono);
       font-size: 12px;
       line-height: 1.7;
       outline: none;
       resize: vertical;
       margin-bottom: 14px;
+      border-radius: var(--radius-sm);
+      transition: border-color 0.15s, box-shadow 0.15s;
     }
 
-    .regex-textarea:focus { border-color: var(--border-strong); }
+    .regex-textarea:focus { border-color: var(--brand-accent); box-shadow: 0 0 0 3px var(--accent-ring); }
 
     .regex-highlight {
       white-space: pre-wrap;
-      font-family: 'SF Mono', Monaco, monospace;
+      font-family: var(--font-mono);
       background: var(--bg-output);
     }
 
@@ -957,7 +1041,7 @@
     .regex-matches div {
       padding: 3px 0;
       border-bottom: 1px solid var(--border-soft);
-      font-family: 'SF Mono', Monaco, monospace;
+      font-family: var(--font-mono);
     }
 
     .regex-matches div:last-child { border-bottom: none; }
@@ -966,7 +1050,7 @@
     .tt-stats {
       display: grid;
       grid-template-columns: repeat(6, 1fr);
-      border-top: 1.5px solid var(--border-strong);
+      border-top: 1px solid var(--border-soft);
       background: var(--bg-output);
     }
 
@@ -977,7 +1061,7 @@
     .tt-stat-item {
       padding: 12px 8px;
       text-align: center;
-      border-right: 1.5px solid var(--border-soft);
+      border-right: 1px solid var(--border-soft);
     }
 
     .tt-stat-item:last-child { border-right: none; }
@@ -995,21 +1079,197 @@
       color: var(--text-secondary);
       margin-top: 2px;
     }
+
+    /* ============================================================ */
+    /* ===== 重设计 · 明亮干净现代(卡片首页 + 工具详情) ===== */
+    /* ============================================================ */
+
+    /* —— 顶栏 —— */
+    .topbar {
+      position: sticky; top: 0; z-index: 50;
+      background: color-mix(in srgb, var(--bg-panel) 82%, transparent);
+      -webkit-backdrop-filter: saturate(180%) blur(12px);
+      backdrop-filter: saturate(180%) blur(12px);
+      border-bottom: 1px solid var(--border-soft);
+    }
+    .topbar-inner {
+      max-width: 1120px; margin: 0 auto;
+      padding: 13px 24px;
+      display: flex; align-items: center; gap: 18px;
+    }
+    .brand {
+      display: flex; align-items: center; gap: 11px;
+      text-decoration: none; flex-shrink: 0; cursor: pointer;
+    }
+    .brand .logo-mark {
+      width: 34px; height: 34px; font-size: 12px; border-radius: 9px;
+      box-shadow: none;
+    }
+    .brand .header-title {
+      font-family: var(--font-display);
+      font-size: 18px; font-weight: 800;
+      letter-spacing: -0.4px; text-transform: none; line-height: 1;
+    }
+    .brand .header-title .matt { color: var(--logo-accent); }
+    .brand .header-title .ools { color: var(--text-primary); }
+
+    .search-wrap { position: relative; flex: 1; max-width: 520px; margin: 0 auto; }
+    .search-ic {
+      position: absolute; left: 13px; top: 50%; transform: translateY(-50%);
+      width: 16px; height: 16px; color: var(--text-tertiary); pointer-events: none;
+    }
+    .tool-search {
+      width: 100%; padding: 9px 14px 9px 38px;
+      font-family: var(--font-ui); font-size: 13px;
+      color: var(--text-primary); background: var(--bg-output);
+      border: 1px solid var(--border-soft); border-radius: 10px;
+      outline: none; transition: border-color .15s, box-shadow .15s, background .15s;
+    }
+    .tool-search::placeholder { color: var(--text-tertiary); }
+    .tool-search:focus {
+      background: var(--bg-panel);
+      border-color: var(--brand-accent);
+      box-shadow: 0 0 0 3px var(--accent-ring);
+    }
+
+    .topbar .icon-btn {
+      width: 38px; height: 38px; border-radius: 10px;
+      border: 1px solid var(--border-soft); flex-shrink: 0;
+    }
+
+    /* —— 内容容器 —— */
+    .container { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+
+    /* —— 首页 Hero —— */
+    .hero { padding: 56px 4px 36px; text-align: center; }
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(30px, 5vw, 46px); font-weight: 800;
+      letter-spacing: -1.4px; line-height: 1.04; color: var(--text-primary);
+    }
+    .hero-title span { color: var(--brand-accent); }
+    .hero-sub {
+      margin: 14px auto 0; max-width: 620px;
+      font-size: 15px; line-height: 1.65; color: var(--text-secondary);
+    }
+
+    /* —— 工具网格 —— */
+    #tool-grid { display: flex; flex-direction: column; gap: 30px; }
+    .cat-title {
+      font-size: 12px; font-weight: 700; letter-spacing: .6px;
+      text-transform: uppercase; color: var(--text-tertiary);
+      margin-bottom: 13px; padding-left: 2px;
+    }
+    .card-row {
+      display: grid; gap: 14px;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    }
+    .tool-card {
+      display: flex; align-items: center; gap: 14px;
+      padding: 16px 18px; text-decoration: none; cursor: pointer;
+      background: var(--bg-panel);
+      border: 1px solid var(--border-soft); border-radius: 14px;
+      box-shadow: var(--shadow-card);
+      transition: transform .16s cubic-bezier(.2,.7,.2,1), box-shadow .16s, border-color .16s;
+    }
+    .tool-card:hover {
+      transform: translateY(-3px);
+      border-color: color-mix(in srgb, var(--brand-accent) 45%, var(--border-soft));
+      box-shadow: var(--shadow-pop);
+    }
+    .tool-ic {
+      width: 46px; height: 46px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-mono); font-size: 16px; font-weight: 700;
+      color: var(--brand-accent);
+      background: var(--accent-soft);
+      border-radius: 12px;
+      transition: background .16s, color .16s;
+    }
+    .tool-card:hover .tool-ic { background: var(--brand-accent); color: #fff; }
+    .tool-meta { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+    .tool-name { font-size: 14.5px; font-weight: 700; color: var(--text-primary); letter-spacing: -.2px; }
+    .tool-desc { font-size: 12.5px; color: var(--text-secondary); }
+    .no-result { text-align: center; color: var(--text-tertiary); padding: 50px 0; font-size: 14px; }
+
+    /* —— 工具详情视图 —— */
+    #tool-view { padding-top: 26px; }
+    .tool-bar { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+    .back-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 7px 13px 7px 9px; font-family: var(--font-ui);
+      font-size: 13px; font-weight: 600; cursor: pointer;
+      color: var(--text-secondary); background: var(--bg-panel);
+      border: 1px solid var(--border-soft); border-radius: 9px;
+      box-shadow: none; transition: color .15s, border-color .15s, background .15s;
+    }
+    .back-btn:hover { color: var(--text-primary); border-color: var(--border-strong); background: var(--bg-output); }
+    .back-btn svg { width: 16px; height: 16px; }
+    .tool-bar-sep { color: var(--text-tertiary); }
+    #tool-view .current-tool-name {
+      font-family: var(--font-display); font-size: 17px; font-weight: 800;
+      letter-spacing: -.3px; text-transform: none; color: var(--text-primary);
+    }
+
+    /* —— 工具工作区(卡片) —— */
+    .panel {
+      flex: none; display: block; overflow: hidden;
+      background: var(--bg-panel);
+      border: 1px solid var(--border-soft); border-radius: 16px;
+      box-shadow: var(--shadow-card);
+    }
+
+    /* —— 操作栏 / 按钮(清爽版) —— */
+    .toolbar { padding: 14px 18px; border-bottom: 1px solid var(--border-soft); gap: 8px; }
+    button {
+      padding: 8px 14px; border: 1px solid var(--border-strong);
+      border-radius: 9px; box-shadow: none;
+      font-weight: 600; letter-spacing: 0; text-transform: none;
+      color: var(--text-primary); background: var(--bg-panel);
+      transition: background .14s, border-color .14s, color .14s;
+    }
+    button:hover { background: var(--bg-output); border-color: var(--text-tertiary); color: var(--text-primary); transform: none; }
+    button.primary, button.action.primary {
+      background: var(--bg-button-primary); color: var(--button-primary-text);
+      border-color: var(--bg-button-primary);
+      box-shadow: 0 1px 2px rgba(255,102,0,.25);
+    }
+    button.primary:hover, button.action.primary:hover {
+      background: var(--bg-button-primary-hover); border-color: var(--bg-button-primary-hover); color: var(--button-primary-text);
+    }
+    button.text-only { border-color: transparent; background: transparent; color: var(--text-secondary); }
+    button.text-only:hover { background: var(--bg-output); border-color: var(--border-soft); color: var(--text-primary); }
+
+    /* —— 编辑器双栏分隔线回归柔和 —— */
+    .editor-panel:first-child, .case-input-section { border-right: 1px solid var(--border-soft); }
+    .panel-header { text-transform: uppercase; }
+    .status-bar { background: var(--bg-output); border-top: 1px solid var(--border-soft); }
+
+    /* —— 响应式 —— */
+    @media (max-width: 720px) {
+      .topbar-inner { gap: 10px; padding: 11px 16px; }
+      .brand .header-title { display: none; }
+      .container { padding: 0 16px; }
+      .hero { padding: 38px 2px 26px; }
+      .card-row { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <!-- 顶部条 -->
-    <div class="header">
-      <div class="header-logo">
-        <div class="logo-mark" aria-label="MatTools Logo">
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="javascript:void(0)" onclick="goHome()" aria-label="返回首页 MatTools">
+        <span class="logo-mark" aria-label="MatTools Logo">
           <span>M</span><span>A</span><span>T</span><span>T</span>
-        </div>
-        <h1 class="header-title"><span class="matt">MatT</span><span class="ools">ools</span></h1>
+        </span>
+        <span class="header-title"><span class="matt">MatT</span><span class="ools">ools</span></span>
+      </a>
+      <div class="search-wrap">
+        <svg class="search-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="7"></circle><path d="m21 21-4.3-4.3"></path>
+        </svg>
+        <input id="tool-search" class="tool-search" type="text" placeholder="搜索工具…  例如 JSON、Base64、时间戳" oninput="filterTools(this.value)" onfocus="goHome()" autocomplete="off">
       </div>
-      <div class="header-divider"></div>
-      <div class="header-brand">数据不离开浏览器 · 免费无广告</div>
-      <div class="header-spacer"></div>
       <button class="icon-btn" onclick="toggleTheme()" aria-label="切换明暗主题">
         <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="4"></circle>
@@ -1023,55 +1283,111 @@
         </svg>
       </button>
     </div>
+  </header>
 
-    <!-- 主体:左右分栏 -->
-    <div class="layout" id="layout">
-      <!-- 左侧边栏 -->
-      <aside class="sidebar" id="sidebar">
-        <!-- 侧边栏顶栏:收起按钮,高度与右侧标题栏对齐 -->
-        <div class="sidebar-head">
-          <button class="sidebar-collapse-btn" onclick="toggleSidebar()" aria-label="收起侧边栏" title="收起侧边栏">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="3" y="3" width="18" height="18" rx="2"></rect>
-              <line x1="9" y1="3" x2="9" y2="21"></line>
-            </svg>
-            <span>收起</span>
-          </button>
-        </div>
-        <nav class="sidebar-nav">
-          <div class="nav-group-label">数据格式</div>
-          <div class="nav-item active" data-tool="json" onclick="switchTool('json')">JSON 格式化</div>
-          <div class="nav-item" data-tool="json2ts" onclick="switchTool('json2ts')">JSON 转 TS</div>
-          <div class="nav-group-label">编码转换</div>
-          <div class="nav-item" data-tool="base64" onclick="switchTool('base64')">Base64</div>
-          <div class="nav-item" data-tool="url" onclick="switchTool('url')">URL 编码</div>
-          <div class="nav-item" data-tool="caseconv" onclick="switchTool('caseconv')">大小写转换</div>
-          <div class="nav-group-label">时间日期</div>
-          <div class="nav-item" data-tool="timestamp" onclick="switchTool('timestamp')">时间戳转换</div>
-          <div class="nav-item" data-tool="timecalc" onclick="switchTool('timecalc')">时间计算器</div>
-          <div class="nav-item" data-tool="cron" onclick="switchTool('cron')">CRON 表达式</div>
-          <div class="nav-group-label">文本处理</div>
-          <div class="nav-item" data-tool="diff" onclick="switchTool('diff')">文本对比</div>
-          <div class="nav-item" data-tool="regex" onclick="switchTool('regex')">正则测试</div>
-          <div class="nav-item" data-tool="texttool" onclick="switchTool('texttool')">文本工具</div>
-          <div class="nav-group-label">其他</div>
-          <div class="nav-item" data-tool="unit" onclick="switchTool('unit')">单位换算</div>
-        </nav>
-      </aside>
-
-      <!-- 收起时显示的展开条 -->
-      <div class="sidebar-rail" id="sidebar-rail" onclick="toggleSidebar()" title="展开工具栏">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M9 18l6-6-6-6"></path>
-        </svg>
+  <div class="container">
+    <!-- ===== 首页:工具卡片 ===== -->
+    <section id="home-view">
+      <div class="hero">
+        <h1 class="hero-title">开发者<span>工具集</span></h1>
+        <p class="hero-sub">JSON · 编码转换 · 时间日期 · 文本处理 —— 所有数据在浏览器本地处理，免费、无广告。</p>
       </div>
 
-      <!-- 右侧主内容区 -->
+      <div id="tool-grid">
+        <section class="cat" data-cat="数据格式">
+          <h2 class="cat-title">数据格式</h2>
+          <div class="card-row">
+            <a class="tool-card" data-name="json 格式化 format pretty 校验 压缩" onclick="openTool('json')">
+              <span class="tool-ic">{ }</span>
+              <span class="tool-meta"><span class="tool-name">JSON 格式化</span><span class="tool-desc">格式化 · 压缩 · 校验 JSON</span></span>
+            </a>
+            <a class="tool-card" data-name="json2ts json typescript 类型 ts 转换" onclick="openTool('json2ts')">
+              <span class="tool-ic">{T}</span>
+              <span class="tool-meta"><span class="tool-name">JSON 转 TypeScript</span><span class="tool-desc">从 JSON 生成 TS 类型定义</span></span>
+            </a>
+          </div>
+        </section>
+
+        <section class="cat" data-cat="编码转换">
+          <h2 class="cat-title">编码转换</h2>
+          <div class="card-row">
+            <a class="tool-card" data-name="base64 编码 解码 编解码" onclick="openTool('base64')">
+              <span class="tool-ic">64</span>
+              <span class="tool-meta"><span class="tool-name">Base64 编解码</span><span class="tool-desc">文本 ↔ Base64 互转</span></span>
+            </a>
+            <a class="tool-card" data-name="url 编码 解码 转义 escape" onclick="openTool('url')">
+              <span class="tool-ic">%</span>
+              <span class="tool-meta"><span class="tool-name">URL 编码</span><span class="tool-desc">URL 编码与解码</span></span>
+            </a>
+            <a class="tool-card" data-name="caseconv 大小写 驼峰 命名 case camel snake" onclick="openTool('caseconv')">
+              <span class="tool-ic">Aa</span>
+              <span class="tool-meta"><span class="tool-name">大小写转换</span><span class="tool-desc">驼峰 · 下划线 · 短横</span></span>
+            </a>
+          </div>
+        </section>
+
+        <section class="cat" data-cat="时间日期">
+          <h2 class="cat-title">时间日期</h2>
+          <div class="card-row">
+            <a class="tool-card" data-name="timestamp 时间戳 unix 日期 转换" onclick="openTool('timestamp')">
+              <span class="tool-ic">◷</span>
+              <span class="tool-meta"><span class="tool-name">时间戳转换</span><span class="tool-desc">Unix 时间戳 ↔ 日期</span></span>
+            </a>
+            <a class="tool-card" data-name="timecalc 时间计算 日期 加减 差值" onclick="openTool('timecalc')">
+              <span class="tool-ic">Δt</span>
+              <span class="tool-meta"><span class="tool-name">时间计算器</span><span class="tool-desc">日期加减与差值</span></span>
+            </a>
+            <a class="tool-card" data-name="cron 表达式 定时 crontab" onclick="openTool('cron')">
+              <span class="tool-ic">✳</span>
+              <span class="tool-meta"><span class="tool-name">CRON 表达式</span><span class="tool-desc">解析 · 下次执行时间</span></span>
+            </a>
+          </div>
+        </section>
+
+        <section class="cat" data-cat="文本处理">
+          <h2 class="cat-title">文本处理</h2>
+          <div class="card-row">
+            <a class="tool-card" data-name="diff 文本对比 比较 差异 compare" onclick="openTool('diff')">
+              <span class="tool-ic">±</span>
+              <span class="tool-meta"><span class="tool-name">文本对比</span><span class="tool-desc">逐行差异高亮</span></span>
+            </a>
+            <a class="tool-card" data-name="regex 正则 匹配 表达式" onclick="openTool('regex')">
+              <span class="tool-ic">.*</span>
+              <span class="tool-meta"><span class="tool-name">正则测试</span><span class="tool-desc">实时匹配与高亮</span></span>
+            </a>
+            <a class="tool-card" data-name="texttool 文本工具 统计 去重 排序 count" onclick="openTool('texttool')">
+              <span class="tool-ic">¶</span>
+              <span class="tool-meta"><span class="tool-name">文本工具</span><span class="tool-desc">统计 · 去重 · 排序</span></span>
+            </a>
+          </div>
+        </section>
+
+        <section class="cat" data-cat="其他">
+          <h2 class="cat-title">其他</h2>
+          <div class="card-row">
+            <a class="tool-card" data-name="unit 单位 换算 转换 convert" onclick="openTool('unit')">
+              <span class="tool-ic">↔</span>
+              <span class="tool-meta"><span class="tool-name">单位换算</span><span class="tool-desc">常用单位快速换算</span></span>
+            </a>
+          </div>
+        </section>
+      </div>
+
+      <p id="no-result" class="no-result" hidden>没有匹配的工具，换个关键词试试。</p>
+    </section>
+
+    <!-- ===== 工具详情 ===== -->
+    <section id="tool-view" hidden>
+      <div class="tool-bar">
+        <button class="back-btn" onclick="goHome()" aria-label="返回所有工具">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg>
+          所有工具
+        </button>
+        <span class="tool-bar-sep">/</span>
+        <span class="current-tool-name" id="current-tool-name">JSON 格式化</span>
+      </div>
+
       <main class="panel">
-        <!-- 当前工具标题栏 -->
-        <div class="panel-top">
-          <div class="current-tool-name" id="current-tool-name">JSON 格式化</div>
-        </div>
 
       <!-- ===== JSON 工具 ===== -->
       <div class="tool-page active" id="page-json">
@@ -1548,7 +1864,7 @@ hello world example
         </div>
       </div>
       </main>
-    </div>
+    </section>
 
     <footer>
       <span class="footer-brand"><span class="matt">MatT</span><span class="ools">ools</span></span> · 所有数据在浏览器本地处理,不会上传到任何服务器 · <span class="footer-version">v0.3.0</span>
@@ -1574,31 +1890,58 @@ hello world example
       diff: '文本对比', regex: '正则测试', texttool: '文本工具', unit: '单位换算'
     };
 
+    /* 切换到指定工具页(仅激活页面 + 更新标题) */
     function switchTool(toolId) {
-      document.querySelectorAll('.nav-item').forEach(t => t.classList.remove('active'));
       document.querySelectorAll('.tool-page').forEach(p => p.classList.remove('active'));
-      const navItem = document.querySelector(`.nav-item[data-tool="${toolId}"]`);
-      if (navItem) navItem.classList.add('active');
       const page = document.getElementById('page-' + toolId);
       if (page) page.classList.add('active');
-      // 更新顶部工具名
       const nameEl = document.getElementById('current-tool-name');
       if (nameEl) nameEl.textContent = TOOL_NAMES[toolId] || toolId;
-      // 手机上选完工具自动收起侧边栏
-      if (window.innerWidth <= 600) {
-        document.getElementById('layout').classList.add('sidebar-collapsed');
-      }
     }
 
-    /* 侧边栏收起/展开 */
-    function toggleSidebar() {
-      document.getElementById('layout').classList.toggle('sidebar-collapsed');
+    /* 打开工具:进入详情视图 */
+    function openTool(toolId) {
+      switchTool(toolId);
+      document.getElementById('home-view').hidden = true;
+      document.getElementById('tool-view').hidden = false;
+      document.title = (TOOL_NAMES[toolId] || 'MatTools') + ' · MatTools 在线开发者工具';
+      window.scrollTo({ top: 0, behavior: 'instant' in document.body.style ? 'instant' : 'auto' });
+      try { history.replaceState(null, '', '#' + toolId); } catch (e) {}
     }
 
-    /* 手机上默认收起侧边栏 */
-    if (window.innerWidth <= 600) {
-      document.getElementById('layout').classList.add('sidebar-collapsed');
+    /* 返回首页(工具卡片) */
+    function goHome() {
+      const tv = document.getElementById('tool-view');
+      if (tv && tv.hidden) return; // 已在首页
+      if (tv) tv.hidden = true;
+      document.getElementById('home-view').hidden = false;
+      document.title = 'MatTools - JSON 格式化、Base64、URL 编码、时间戳转换 · 在线开发者工具';
+      try { history.replaceState(null, '', location.pathname); } catch (e) {}
     }
+
+    /* 首页搜索过滤 */
+    function filterTools(q) {
+      q = (q || '').trim().toLowerCase();
+      let any = false;
+      document.querySelectorAll('#tool-grid .cat').forEach(cat => {
+        let shown = 0;
+        cat.querySelectorAll('.tool-card').forEach(card => {
+          const hit = !q || (card.dataset.name || '').toLowerCase().includes(q);
+          card.style.display = hit ? '' : 'none';
+          if (hit) shown++;
+        });
+        cat.style.display = shown ? '' : 'none';
+        if (shown) any = true;
+      });
+      document.getElementById('no-result').hidden = any;
+    }
+
+    /* 进入页面时:若 URL 带 #工具 则直接打开,否则首页 */
+    (function initRoute() {
+      const id = (location.hash || '').replace('#', '');
+      if (id && TOOL_NAMES[id]) openTool(id);
+      else goHome();
+    })();
 
     /* ========== 通用辅助函数 ========== */
     function showMessage(elId, text, type) {
