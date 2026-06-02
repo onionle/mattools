@@ -7,7 +7,7 @@
   <meta name="description" content="MatTools 开发者工具集,提供 JSON 格式化、Base64 编解码、URL 编码、JSON 转 TypeScript、时间戳转换等实用工具。数据全部在浏览器本地处理,免费、安全、无广告。">
   <meta name="keywords" content="JSON格式化,Base64编码,URL编码,JSON转TypeScript,时间戳转换,在线开发者工具">
   
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'%3E%3Crect width='60' height='60' rx='14' fill='%23000'/%3E%3Ctext x='15' y='27' font-family='monospace' font-size='22' font-weight='700' fill='%23fff' text-anchor='middle'%3EM%3C/text%3E%3Ctext x='45' y='27' font-family='monospace' font-size='22' font-weight='700' fill='%23ff6600' text-anchor='middle'%3EA%3C/text%3E%3Ctext x='15' y='53' font-family='monospace' font-size='22' font-weight='700' fill='%23ff6600' text-anchor='middle'%3ET%3C/text%3E%3Ctext x='45' y='53' font-family='monospace' font-size='22' font-weight='700' fill='%23fff' text-anchor='middle'%3ET%3C/text%3E%3C/svg%3E">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'%3E%3Crect x='1.5' y='1.5' width='57' height='57' rx='14' fill='%23ffffff' stroke='%23e6e6e6' stroke-width='2'/%3E%3Ctext x='15' y='27' font-family='monospace' font-size='22' font-weight='700' fill='%2318181b' text-anchor='middle'%3EM%3C/text%3E%3Ctext x='45' y='27' font-family='monospace' font-size='22' font-weight='700' fill='%23e8852b' text-anchor='middle'%3EA%3C/text%3E%3Ctext x='15' y='53' font-family='monospace' font-size='22' font-weight='700' fill='%23e8852b' text-anchor='middle'%3ET%3C/text%3E%3Ctext x='45' y='53' font-family='monospace' font-size='22' font-weight='700' fill='%2318181b' text-anchor='middle'%3ET%3C/text%3E%3C/svg%3E">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -115,6 +115,38 @@
         radial-gradient(60% 50% at 88% -8%, rgba(91,91,240,.14), transparent 62%),
         radial-gradient(50% 42% at 2% 8%, rgba(15,184,176,.12), transparent 58%),
         radial-gradient(55% 45% at 100% 108%, rgba(255,106,138,.10), transparent 60%);
+    }
+
+    /* ☁ Nimbus — 柔灰云:阴天天空,冷灰白柔和低对比 */
+    [data-theme="cloud"] {
+      --bg-page: #eceff4;
+      --bg-panel: #ffffff;
+      --bg-output: #ffffff;
+      --bg-button-primary: #6486ab;
+      --bg-button-primary-hover: #54759a;
+      --text-primary: #2b313c;
+      --text-secondary: #5d6573;
+      --text-tertiary: #9aa2af;
+      --border-strong: #d6dde6;
+      --border-soft: #e6eaf0;
+      --border-hairline: #eef1f5;
+      --tab-active-bg: #2b313c;
+      --tab-active-text: #ffffff;
+      --button-primary-text: #ffffff;
+      --logo-bg: linear-gradient(135deg, #7b9cc0, #aec5dc);
+      --logo-text: #ffffff;
+      --logo-accent: #6486ab;
+      --brand-accent: #6486ab;
+      --accent-2: #8fb0cf;
+      --accent-ring: rgba(100,134,171,.18);
+      --accent-soft: rgba(100,134,171,.10);
+      --shadow-card: 0 1px 2px rgba(40,55,80,.05), 0 1px 3px rgba(50,65,95,.06);
+      --shadow-sm: 0 1px 2px rgba(40,55,80,.05);
+      --shadow-pop: 0 18px 38px -22px rgba(50,65,95,.24);
+      --page-mesh:
+        radial-gradient(60% 50% at 85% -8%, rgba(150,170,200,.16), transparent 62%),
+        radial-gradient(52% 44% at 6% 6%, rgba(120,150,190,.12), transparent 58%),
+        radial-gradient(50% 46% at 100% 106%, rgba(175,197,220,.14), transparent 60%);
     }
 
     /* 🌙 Aurora — 暗色霓虹(07-aurora):青 / 品红 / 紫,近黑底多彩语法 */
@@ -232,9 +264,11 @@
 
     .icon-btn:hover { background: var(--bg-output); color: var(--text-primary); border-color: var(--text-tertiary); }
     .icon-btn svg { width: 16px; height: 16px; }
-    /* 三主题循环:☀ Pomelo(默认) → 💧 Lagoon → 🌙 Twilight,只显示当前主题的图标 */
+    /* 四主题循环:☀ Pomelo(默认) → ☁ Nimbus → 💧 Lagoon → 🌙 Aurora,只显示当前主题的图标 */
     .icon-btn .icon-sun { display: block; }
-    .icon-btn .icon-drop, .icon-btn .icon-moon { display: none; }
+    .icon-btn .icon-cloud, .icon-btn .icon-drop, .icon-btn .icon-moon { display: none; }
+    [data-theme="cloud"] .icon-btn .icon-sun { display: none; }
+    [data-theme="cloud"] .icon-btn .icon-cloud { display: block; }
     [data-theme="lagoon"] .icon-btn .icon-sun { display: none; }
     [data-theme="lagoon"] .icon-btn .icon-drop { display: block; }
     [data-theme="aurora"] .icon-btn .icon-sun { display: none; }
@@ -1177,6 +1211,53 @@
       border: 1px solid var(--border-soft); flex-shrink: 0;
     }
 
+    /* —— 径向主题选择器:悬停十字展开四个主题(上/右/下/左) —— */
+    .theme-switcher { position: relative; flex-shrink: 0; }
+    .theme-switcher .icon-btn { transition: transform .25s cubic-bezier(.34,1.56,.64,1), border-color .15s, background .15s; }
+    .theme-switcher.open .icon-btn,
+    .theme-switcher:focus-within .icon-btn {
+      transform: rotate(45deg) scale(1.04);
+      border-color: var(--brand-accent);
+      color: var(--brand-accent);
+    }
+    .theme-options {
+      position: absolute; top: 100%; right: -7px;
+      width: 132px; height: 144px; z-index: 60; pointer-events: none;
+    }
+    .theme-opt {
+      position: absolute; width: 36px; height: 36px; padding: 0;
+      display: grid; place-items: center; border-radius: 50%;
+      background: var(--bg-panel); color: var(--text-secondary);
+      border: 1px solid var(--border-soft); box-shadow: var(--shadow-pop);
+      cursor: pointer; opacity: 0; pointer-events: none;
+      transform: translate(24px, -30px) scale(.3);
+      transition: opacity .2s ease, transform .32s cubic-bezier(.34,1.56,.64,1),
+                  color .15s, border-color .15s, background .15s;
+    }
+    .theme-opt svg { width: 18px; height: 18px; }
+    /* 四个方位(132×144 盒内,圆点 36,半径 18,中心约 66/64) */
+    .theme-opt[data-pos="up"]    { left: 48px; top: 8px; }
+    .theme-opt[data-pos="right"] { left: 90px; top: 50px; }
+    .theme-opt[data-pos="down"]  { left: 48px; top: 92px; }
+    .theme-opt[data-pos="left"]  { left: 6px;  top: 50px; }
+    /* 展开 */
+    .theme-switcher.open .theme-opt,
+    .theme-switcher:focus-within .theme-opt {
+      opacity: 1; pointer-events: auto; transform: translate(0, 0) scale(1);
+      transition-delay: calc(var(--i) * 38ms);
+    }
+    .theme-opt:hover { color: var(--brand-accent); border-color: var(--brand-accent); }
+    .theme-switcher.open .theme-opt:hover,
+    .theme-switcher:focus-within .theme-opt:hover { transform: scale(1.16); transition-delay: 0s; }
+    .theme-opt.current {
+      color: var(--brand-accent); border-color: var(--brand-accent);
+      box-shadow: var(--shadow-pop), inset 0 0 0 1px var(--brand-accent), 0 0 0 3px var(--accent-soft);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .theme-opt { transition: opacity .15s; transform: none; }
+      .theme-switcher.open .icon-btn, .theme-switcher:focus-within .icon-btn { transform: none; }
+    }
+
     /* —— 内容容器(填满剩余高度) —— */
     .container {
       flex: 1; min-height: 0;
@@ -1382,22 +1463,41 @@
       <span class="brand-tagline">数据不离开浏览器</span>
       <div class="topbar-spacer"></div>
       <span class="status-pill"><span class="pill-dot"></span>本地处理 · 免费无广告</span>
-      <button class="icon-btn" id="theme-btn" onclick="toggleTheme()" aria-label="切换主题" title="主题">
-        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="4"></circle>
-          <path d="M12 2v2"></path><path d="M12 20v2"></path>
-          <path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path>
-          <path d="M2 12h2"></path><path d="M20 12h2"></path>
-          <path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path>
-        </svg>
-        <svg class="icon-drop" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 2.5C12 2.5 5.5 9.5 5.5 14.5a6.5 6.5 0 0 0 13 0C18.5 9.5 12 2.5 12 2.5Z"></path>
-          <path d="M9.2 14.6a2.8 2.8 0 0 0 2.6 2.4"></path>
-        </svg>
-        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
-        </svg>
-      </button>
+      <div class="theme-switcher" id="theme-switcher">
+        <button class="icon-btn" id="theme-btn" aria-haspopup="true" aria-expanded="false" aria-label="切换主题" title="主题(悬停展开)">
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4"></circle>
+            <path d="M12 2v2"></path><path d="M12 20v2"></path>
+            <path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path>
+            <path d="M2 12h2"></path><path d="M20 12h2"></path>
+            <path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path>
+          </svg>
+          <svg class="icon-drop" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2.5C12 2.5 5.5 9.5 5.5 14.5a6.5 6.5 0 0 0 13 0C18.5 9.5 12 2.5 12 2.5Z"></path>
+            <path d="M9.2 14.6a2.8 2.8 0 0 0 2.6 2.4"></path>
+          </svg>
+          <svg class="icon-cloud" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 .26-9.99Z"></path>
+          </svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+          </svg>
+        </button>
+        <div class="theme-options" role="menu" aria-label="选择主题">
+          <button class="theme-opt" type="button" data-theme-set="pomelo" data-pos="up" style="--i:0" role="menuitem" title="Pomelo · 暖色亮" aria-label="切换到 Pomelo 暖色亮主题">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg>
+          </button>
+          <button class="theme-opt" type="button" data-theme-set="cloud" data-pos="right" style="--i:1" role="menuitem" title="Nimbus · 柔灰云" aria-label="切换到 Nimbus 柔灰云主题">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 .26-9.99Z"></path></svg>
+          </button>
+          <button class="theme-opt" type="button" data-theme-set="lagoon" data-pos="down" style="--i:2" role="menuitem" title="Lagoon · 冷色亮" aria-label="切换到 Lagoon 冷色亮主题">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5C12 2.5 5.5 9.5 5.5 14.5a6.5 6.5 0 0 0 13 0C18.5 9.5 12 2.5 12 2.5Z"></path><path d="M9.2 14.6a2.8 2.8 0 0 0 2.6 2.4"></path></svg>
+          </button>
+          <button class="theme-opt" type="button" data-theme-set="aurora" data-pos="left" style="--i:3" role="menuitem" title="Aurora · 暗色霓虹" aria-label="切换到 Aurora 暗色霓虹主题">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg>
+          </button>
+        </div>
+      </div>
     </div>
   </header>
 
@@ -2031,15 +2131,36 @@ hello world example
 
   <script>
     /* ========== 主题:三套循环 ☀ Pomelo → 💧 Lagoon → 🌙 Twilight ========== */
-    const THEME_ORDER = ['pomelo', 'lagoon', 'aurora'];
-    const THEME_LABELS = { pomelo: 'Pomelo · 暖色亮', lagoon: 'Lagoon · 冷色亮', aurora: 'Aurora · 暗色霓虹' };
+    const THEME_ORDER = ['pomelo', 'cloud', 'lagoon', 'aurora'];
+    const THEME_LABELS = { pomelo: 'Pomelo · 暖色亮', cloud: 'Nimbus · 柔灰云', lagoon: 'Lagoon · 冷色亮', aurora: 'Aurora · 暗色霓虹' };
+    const THEME_ACCENT = { pomelo: '#e8852b', cloud: '#6486ab', lagoon: '#5b5bf0', aurora: '#3dd7e0' };
+
+    /* 用当前主题强调色重写 favicon( { } 花括号,与页面 logo 一致) */
+    function setFavicon(color) {
+      const svg = "data:image/svg+xml," + encodeURIComponent(
+        "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'>"
+        + "<rect x='1.5' y='1.5' width='57' height='57' rx='14' fill='#ffffff' stroke='#e6e6e6' stroke-width='2'/>"
+        + "<text x='15' y='27' font-family='monospace' font-size='22' font-weight='700' fill='#18181b' text-anchor='middle'>M</text>"
+        + "<text x='45' y='27' font-family='monospace' font-size='22' font-weight='700' fill='" + color + "' text-anchor='middle'>A</text>"
+        + "<text x='15' y='53' font-family='monospace' font-size='22' font-weight='700' fill='" + color + "' text-anchor='middle'>T</text>"
+        + "<text x='45' y='53' font-family='monospace' font-size='22' font-weight='700' fill='#18181b' text-anchor='middle'>T</text>"
+        + "</svg>"
+      );
+      let link = document.querySelector("link[rel='icon']");
+      if (!link) { link = document.createElement('link'); link.rel = 'icon'; document.head.appendChild(link); }
+      link.type = 'image/svg+xml';
+      link.href = svg;
+    }
 
     function applyTheme(name) {
       if (!THEME_ORDER.includes(name)) name = 'pomelo';
       document.documentElement.setAttribute('data-theme', name);
-      const next = THEME_ORDER[(THEME_ORDER.indexOf(name) + 1) % THEME_ORDER.length];
       const btn = document.getElementById('theme-btn');
-      if (btn) btn.title = '主题 ' + THEME_LABELS[name] + ' · 点击切到 ' + THEME_LABELS[next].split(' ')[0];
+      if (btn) btn.title = '主题 ' + THEME_LABELS[name] + ' · 悬停展开切换';
+      setFavicon(THEME_ACCENT[name]);
+      /* 标记径向菜单中当前主题 */
+      document.querySelectorAll('.theme-opt').forEach(o =>
+        o.classList.toggle('current', o.dataset.themeSet === name));
       try { localStorage.setItem('mt-theme', name); } catch (e) {}
     }
 
@@ -2056,6 +2177,27 @@ hello world example
         saved = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'aurora' : 'pomelo';
       }
       applyTheme(saved);
+    })();
+
+    /* ========== 径向主题菜单:悬停展开 / 点击选择 ========== */
+    (function themeMenu() {
+      const sw = document.getElementById('theme-switcher');
+      const btn = document.getElementById('theme-btn');
+      if (!sw || !btn) return;
+      let closeT;
+      const open = () => { clearTimeout(closeT); sw.classList.add('open'); btn.setAttribute('aria-expanded', 'true'); };
+      const close = () => {
+        sw.classList.remove('open'); btn.setAttribute('aria-expanded', 'false');
+        if (sw.contains(document.activeElement)) document.activeElement.blur();  // 释放 :focus-within,确保收起
+      };
+      sw.addEventListener('mouseenter', open);
+      sw.addEventListener('mouseleave', () => { closeT = setTimeout(close, 180); });
+      btn.addEventListener('click', (e) => { e.stopPropagation(); sw.classList.contains('open') ? close() : open(); });
+      sw.querySelectorAll('.theme-opt').forEach(o => {
+        o.addEventListener('click', (e) => { e.stopPropagation(); applyTheme(o.dataset.themeSet); close(); });
+      });
+      document.addEventListener('click', (e) => { if (!sw.contains(e.target)) close(); });
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
     })();
 
     /* ========== 工具切换 ========== */
