@@ -1211,52 +1211,9 @@
       border: 1px solid var(--border-soft); flex-shrink: 0;
     }
 
-    /* —— 径向主题选择器:悬停十字展开四个主题(上/右/下/左) —— */
-    .theme-switcher { position: relative; flex-shrink: 0; }
-    .theme-switcher .icon-btn { transition: transform .25s cubic-bezier(.34,1.56,.64,1), border-color .15s, background .15s; }
-    .theme-switcher.open .icon-btn,
-    .theme-switcher:focus-within .icon-btn {
-      transform: rotate(45deg) scale(1.04);
-      border-color: var(--brand-accent);
-      color: var(--brand-accent);
-    }
-    .theme-options {
-      position: absolute; top: 100%; right: -7px;
-      width: 132px; height: 144px; z-index: 60; pointer-events: none;
-    }
-    .theme-opt {
-      position: absolute; width: 36px; height: 36px; padding: 0;
-      display: grid; place-items: center; border-radius: 50%;
-      background: var(--bg-panel); color: var(--text-secondary);
-      border: 1px solid var(--border-soft); box-shadow: var(--shadow-pop);
-      cursor: pointer; opacity: 0; pointer-events: none;
-      transform: translate(24px, -30px) scale(.3);
-      transition: opacity .2s ease, transform .32s cubic-bezier(.34,1.56,.64,1),
-                  color .15s, border-color .15s, background .15s;
-    }
-    .theme-opt svg { width: 18px; height: 18px; }
-    /* 四个方位(132×144 盒内,圆点 36,半径 18,中心约 66/64) */
-    .theme-opt[data-pos="up"]    { left: 48px; top: 8px; }
-    .theme-opt[data-pos="right"] { left: 90px; top: 50px; }
-    .theme-opt[data-pos="down"]  { left: 48px; top: 92px; }
-    .theme-opt[data-pos="left"]  { left: 6px;  top: 50px; }
-    /* 展开 */
-    .theme-switcher.open .theme-opt,
-    .theme-switcher:focus-within .theme-opt {
-      opacity: 1; pointer-events: auto; transform: translate(0, 0) scale(1);
-      transition-delay: calc(var(--i) * 38ms);
-    }
-    .theme-opt:hover { color: var(--brand-accent); border-color: var(--brand-accent); }
-    .theme-switcher.open .theme-opt:hover,
-    .theme-switcher:focus-within .theme-opt:hover { transform: scale(1.16); transition-delay: 0s; }
-    .theme-opt.current {
-      color: var(--brand-accent); border-color: var(--brand-accent);
-      box-shadow: var(--shadow-pop), inset 0 0 0 1px var(--brand-accent), 0 0 0 3px var(--accent-soft);
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .theme-opt { transition: opacity .15s; transform: none; }
-      .theme-switcher.open .icon-btn, .theme-switcher:focus-within .icon-btn { transform: none; }
-    }
+    /* —— 主题切换按钮:点击循环切换 —— */
+    .theme-switcher { flex-shrink: 0; }
+    .theme-switcher .icon-btn { transition: border-color .18s, color .18s, background .18s; }
 
     /* —— 内容容器(填满剩余高度) —— */
     .container {
@@ -1464,7 +1421,7 @@
       <div class="topbar-spacer"></div>
       <span class="status-pill"><span class="pill-dot"></span>本地处理 · 免费无广告</span>
       <div class="theme-switcher" id="theme-switcher">
-        <button class="icon-btn" id="theme-btn" aria-haspopup="true" aria-expanded="false" aria-label="切换主题" title="主题(悬停展开)">
+        <button class="icon-btn" id="theme-btn" aria-label="切换主题" title="切换主题(点击循环)">
           <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="4"></circle>
             <path d="M12 2v2"></path><path d="M12 20v2"></path>
@@ -1483,20 +1440,6 @@
             <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
           </svg>
         </button>
-        <div class="theme-options" role="menu" aria-label="选择主题">
-          <button class="theme-opt" type="button" data-theme-set="pomelo" data-pos="up" style="--i:0" role="menuitem" title="Pomelo · 暖色亮" aria-label="切换到 Pomelo 暖色亮主题">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg>
-          </button>
-          <button class="theme-opt" type="button" data-theme-set="cloud" data-pos="right" style="--i:1" role="menuitem" title="Nimbus · 柔灰云" aria-label="切换到 Nimbus 柔灰云主题">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 .26-9.99Z"></path></svg>
-          </button>
-          <button class="theme-opt" type="button" data-theme-set="lagoon" data-pos="down" style="--i:2" role="menuitem" title="Lagoon · 冷色亮" aria-label="切换到 Lagoon 冷色亮主题">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5C12 2.5 5.5 9.5 5.5 14.5a6.5 6.5 0 0 0 13 0C18.5 9.5 12 2.5 12 2.5Z"></path><path d="M9.2 14.6a2.8 2.8 0 0 0 2.6 2.4"></path></svg>
-          </button>
-          <button class="theme-opt" type="button" data-theme-set="aurora" data-pos="left" style="--i:3" role="menuitem" title="Aurora · 暗色霓虹" aria-label="切换到 Aurora 暗色霓虹主题">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg>
-          </button>
-        </div>
       </div>
     </div>
   </header>
@@ -2156,11 +2099,8 @@ hello world example
       if (!THEME_ORDER.includes(name)) name = 'pomelo';
       document.documentElement.setAttribute('data-theme', name);
       const btn = document.getElementById('theme-btn');
-      if (btn) btn.title = '主题 ' + THEME_LABELS[name] + ' · 悬停展开切换';
+      if (btn) btn.title = '主题 ' + THEME_LABELS[name] + ' · 点击切换';
       setFavicon(THEME_ACCENT[name]);
-      /* 标记径向菜单中当前主题 */
-      document.querySelectorAll('.theme-opt').forEach(o =>
-        o.classList.toggle('current', o.dataset.themeSet === name));
       try { localStorage.setItem('mt-theme', name); } catch (e) {}
     }
 
@@ -2179,25 +2119,10 @@ hello world example
       applyTheme(saved);
     })();
 
-    /* ========== 径向主题菜单:悬停展开 / 点击选择 ========== */
-    (function themeMenu() {
-      const sw = document.getElementById('theme-switcher');
+    /* ========== 主题切换:点击循环到下一套主题 ========== */
+    (function themeToggle() {
       const btn = document.getElementById('theme-btn');
-      if (!sw || !btn) return;
-      let closeT;
-      const open = () => { clearTimeout(closeT); sw.classList.add('open'); btn.setAttribute('aria-expanded', 'true'); };
-      const close = () => {
-        sw.classList.remove('open'); btn.setAttribute('aria-expanded', 'false');
-        if (sw.contains(document.activeElement)) document.activeElement.blur();  // 释放 :focus-within,确保收起
-      };
-      sw.addEventListener('mouseenter', open);
-      sw.addEventListener('mouseleave', () => { closeT = setTimeout(close, 180); });
-      btn.addEventListener('click', (e) => { e.stopPropagation(); sw.classList.contains('open') ? close() : open(); });
-      sw.querySelectorAll('.theme-opt').forEach(o => {
-        o.addEventListener('click', (e) => { e.stopPropagation(); applyTheme(o.dataset.themeSet); close(); });
-      });
-      document.addEventListener('click', (e) => { if (!sw.contains(e.target)) close(); });
-      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+      if (btn) btn.addEventListener('click', toggleTheme);
     })();
 
     /* ========== 工具切换 ========== */
