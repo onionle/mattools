@@ -762,6 +762,63 @@
     .jt-bool { color: #8a5cf6; }
     .jt-null { color: #94a3b8; }
 
+    /* ===== 自定义下拉框 ===== */
+    select.inline-input.enhanced { display: none; }
+    .select-wrap { position: relative; display: inline-block; vertical-align: middle; }
+    .select-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      min-width: 124px;
+      padding: 6px 11px;
+      border: 1px solid var(--border-soft);
+      background: var(--bg-panel);
+      color: var(--text-primary);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: border-color .15s, box-shadow .15s;
+    }
+    .select-btn:hover { border-color: var(--border-strong); }
+    .select-wrap.open .select-btn { border-color: var(--brand-accent); box-shadow: 0 0 0 3px var(--accent-ring); }
+    .select-btn .sb-caret { display: inline-flex; color: var(--text-tertiary); transition: transform .15s; }
+    .select-wrap.open .select-btn .sb-caret { transform: rotate(180deg); }
+    .select-menu {
+      position: absolute;
+      z-index: 60;
+      top: calc(100% + 5px);
+      left: 0;
+      min-width: 100%;
+      background: var(--bg-panel);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow-pop);
+      padding: 4px;
+      max-height: 280px;
+      overflow: auto;
+      display: none;
+    }
+    .select-wrap.open .select-menu { display: block; }
+    .select-opt {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 7px 10px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-secondary);
+      border-radius: 4px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .select-opt:hover { background: var(--accent-soft); color: var(--text-primary); }
+    .select-opt.selected { color: var(--brand-accent); font-weight: 700; }
+    .select-opt .so-check { opacity: 0; font-size: 10px; }
+    .select-opt.selected .so-check { opacity: 1; }
+
     .ts-unit-toggle {
       display: flex;
       gap: 0;
@@ -4571,6 +4628,67 @@ hello world example
       document.getElementById('sql-status').textContent = '空闲';
       showMessage('sql-message', '', '');
     }
+
+    /* ========== 自定义下拉框:用可样式化的菜单替换原生 <select> 的系统列表 ========== */
+    function closeAllSelects() {
+      document.querySelectorAll('.select-wrap.open').forEach(w => w.classList.remove('open'));
+    }
+    function enhanceSelects(root) {
+      (root || document).querySelectorAll('select.inline-input:not(.enhanced)').forEach(sel => {
+        sel.classList.add('enhanced');
+        const wrap = document.createElement('span');
+        wrap.className = 'select-wrap';
+        sel.parentNode.insertBefore(wrap, sel);
+        wrap.appendChild(sel);
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'select-btn';
+        const label = document.createElement('span');
+        label.className = 'sb-label';
+        const caret = document.createElement('span');
+        caret.className = 'sb-caret';
+        caret.innerHTML = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>';
+        btn.appendChild(label);
+        btn.appendChild(caret);
+        wrap.appendChild(btn);
+        const menu = document.createElement('div');
+        menu.className = 'select-menu';
+        wrap.appendChild(menu);
+        const syncLabel = () => { const o = sel.options[sel.selectedIndex]; label.textContent = o ? o.textContent : ''; };
+        const buildMenu = () => {
+          menu.innerHTML = '';
+          [...sel.options].forEach(opt => {
+            const o = document.createElement('div');
+            o.className = 'select-opt' + (opt.selected ? ' selected' : '');
+            const t = document.createElement('span');
+            t.textContent = opt.textContent;
+            const ck = document.createElement('span');
+            ck.className = 'so-check';
+            ck.textContent = '✓';
+            o.appendChild(t);
+            o.appendChild(ck);
+            o.addEventListener('click', e => {
+              e.stopPropagation();
+              sel.value = opt.value;
+              syncLabel();
+              sel.dispatchEvent(new Event('change', { bubbles: true }));
+              wrap.classList.remove('open');
+            });
+            menu.appendChild(o);
+          });
+        };
+        btn.addEventListener('click', e => {
+          e.stopPropagation();
+          const isOpen = wrap.classList.contains('open');
+          closeAllSelects();
+          if (!isOpen) { buildMenu(); wrap.classList.add('open'); }
+        });
+        syncLabel();
+      });
+    }
+    document.addEventListener('click', closeAllSelects);
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeAllSelects(); });
+    enhanceSelects();
   </script>
 </body>
 </html>
