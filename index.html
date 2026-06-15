@@ -1264,6 +1264,47 @@
       display: block;
     }
 
+    /* --- JSON 对比:左右并排视图(带行号) --- */
+    .jsondiff-old { color: #ff6b6b; }
+    .jsondiff-new { color: #51cf66; }
+
+    .jdl-row {
+      display: grid;
+      grid-template-columns: 40px 1fr 40px 1fr;
+      align-items: start;
+    }
+    .jdl-gut {
+      text-align: right;
+      padding-right: 8px;
+      color: var(--text-tertiary);
+      user-select: none;
+      opacity: 0.7;
+    }
+    .jdl-rgut { border-left: 1px solid var(--border-soft); padding-left: 8px; }
+    .jdl-code {
+      white-space: pre-wrap;
+      word-break: break-all;
+      padding: 0 6px;
+    }
+    /* 单元格底色:删除(左)红、新增(右)绿、占位灰 */
+    .jdl-del { background: rgba(255, 69, 58, 0.18); color: var(--text-primary); }
+    .jdl-add { background: rgba(48, 209, 88, 0.18); color: var(--text-primary); }
+    .jdl-empty {
+      background: repeating-linear-gradient(45deg, var(--bg-panel), var(--bg-panel) 6px, transparent 6px, transparent 12px);
+      opacity: 0.5;
+    }
+    .jdl-row.same .jdl-code { color: var(--text-secondary); }
+
+    .jsondiff-summary {
+      display: flex;
+      gap: 16px;
+      padding: 8px 20px;
+      font-size: 12px;
+      border-top: 1px solid var(--border-soft);
+      color: var(--text-secondary);
+    }
+    .jsondiff-summary b { color: var(--text-primary); }
+
     /* --- 正则测试 --- */
     .regex-input-area { margin-bottom: 14px; }
 
@@ -1717,6 +1758,10 @@
               <span class="tool-ic">{ }</span>
               <span class="tool-meta"><span class="tool-name">JSON 格式化</span><span class="tool-desc">格式化 · 压缩 · 校验 JSON</span></span>
             </a>
+            <a class="tool-card" data-name="jsondiff json 对比 比较 差异 diff compare 结构" onclick="openTool('jsondiff')">
+              <span class="tool-ic">{≠}</span>
+              <span class="tool-meta"><span class="tool-name">JSON 对比</span><span class="tool-desc">语义结构对比 · 字段差异</span></span>
+            </a>
             <a class="tool-card" data-name="json2ts json typescript 类型 ts 转换" onclick="openTool('json2ts')">
               <span class="tool-ic">{T}</span>
               <span class="tool-meta"><span class="tool-name">JSON 转 TypeScript</span><span class="tool-desc">从 JSON 生成 TS 类型定义</span></span>
@@ -1836,6 +1881,7 @@
         <div class="nav-group">
           <div class="nav-cap">数据格式</div>
           <a class="nav-item" data-tool="json" data-name="json 格式化 format pretty 校验 压缩" onclick="openTool('json')">JSON 格式化</a>
+          <a class="nav-item" data-tool="jsondiff" data-name="jsondiff json 对比 比较 差异 diff compare 结构" onclick="openTool('jsondiff')">JSON 对比</a>
           <a class="nav-item" data-tool="json2ts" data-name="json2ts json typescript 类型 ts 转换" onclick="openTool('json2ts')">JSON 转 TypeScript</a>
           <a class="nav-item" data-tool="json2java" data-name="json2java json java bean pojo lombok 实体类 转换" onclick="openTool('json2java')">JSON 转 Java Bean</a>
         </div>
@@ -2288,6 +2334,52 @@ hello world example
         </div>
       </div>
 
+      <!-- ===== JSON 对比 ===== -->
+      <div class="tool-page" id="page-jsondiff">
+        <div class="toolbar">
+          <button class="primary" onclick="jsonDiffCompare()">▶ 对比</button>
+          <button onclick="jsonDiffExample()">示例</button>
+          <div class="toolbar-spacer"></div>
+          <button class="text-only" onclick="jsonDiffClear()">清空</button>
+        </div>
+        <div class="options-bar">
+          <label class="checkbox-wrapper">
+            <input type="checkbox" id="jsondiff-sortkeys" checked>
+            <span>对象键排序(忽略字段顺序)</span>
+          </label>
+          <span style="color: var(--text-tertiary);">·</span>
+          <label class="checkbox-wrapper">
+            <input type="checkbox" id="jsondiff-ignoreindent" checked>
+            <span>忽略缩进(识别嵌套/包含)</span>
+          </label>
+          <span style="color: var(--text-tertiary);">· 相同行共用,<span class="jsondiff-new">+新增行</span> <span class="jsondiff-old">-删除行</span></span>
+        </div>
+        <div class="editor-wrapper">
+          <div class="editor-panel">
+            <div class="panel-header">→ 原 JSON (左)</div>
+            <textarea id="jsondiff-a" placeholder="粘贴第一个 JSON"></textarea>
+          </div>
+          <div class="editor-panel">
+            <div class="panel-header output-header">→ 对比 JSON (右)</div>
+            <textarea id="jsondiff-b" class="output" placeholder="粘贴第二个 JSON" style="background:var(--bg-panel);"></textarea>
+          </div>
+        </div>
+        <div class="diff-result-wrap">
+          <div class="panel-header">← 差异结果</div>
+          <div class="jsondiff-summary" id="jsondiff-summary" hidden>
+            <span>新增行 <b id="jsondiff-add">0</b></span>
+            <span>删除行 <b id="jsondiff-del">0</b></span>
+            <span>相同行 <b id="jsondiff-mod">0</b></span>
+          </div>
+          <div class="diff-result" id="jsondiff-result">差异结果会显示在这里</div>
+        </div>
+        <div class="status-bar">
+          <div class="status-item">状态: <span class="value" id="jsondiff-status">空闲</span></div>
+          <div class="status-item">差异数: <span class="value" id="jsondiff-count">0</span></div>
+          <div class="status-message" id="jsondiff-message"></div>
+        </div>
+      </div>
+
       <!-- ===== 正则测试器 ===== -->
       <div class="tool-page" id="page-regex">
         <div class="toolbar">
@@ -2654,7 +2746,7 @@ hello world example
     /* ========== 工具切换 ========== */
     /* 工具名映射(用于顶部标题) */
     const TOOL_NAMES = {
-      json: 'JSON 格式化', json2ts: 'JSON 转 TypeScript', json2java: 'JSON 转 Java Bean',
+      json: 'JSON 格式化', json2ts: 'JSON 转 TypeScript', json2java: 'JSON 转 Java Bean', jsondiff: 'JSON 对比',
       base64: 'Base64 编解码', url: 'URL 编码', caseconv: '大小写转换',
       jwt: 'JWT 解析', hash: 'Hash 哈希',
       timestamp: '时间戳转换', timecalc: '时间计算器', cron: 'CRON 表达式',
@@ -3862,6 +3954,165 @@ hello world example
       document.getElementById('diff-count').textContent = '0';
       document.getElementById('diff-status').textContent = '空闲';
       showMessage('diff-message', '', '');
+    }
+
+    /* ========================================== */
+    /* ========== JSON 对比工具 ========== */
+    /* ========================================== */
+
+    /* 判断是否为「普通对象」(非数组、非 null) */
+    function jdIsObject(v) {
+      return v !== null && typeof v === 'object' && !Array.isArray(v);
+    }
+
+    /* 递归排序对象的 key(数组顺序保持不变),得到规范化结构,
+       这样字段顺序不同不会被误判为差异 */
+    function jdSortDeep(v) {
+      if (Array.isArray(v)) return v.map(jdSortDeep);
+      if (jdIsObject(v)) {
+        const out = {};
+        Object.keys(v).sort().forEach(k => { out[k] = jdSortDeep(v[k]); });
+        return out;
+      }
+      return v;
+    }
+
+    /* 生成一行并排视图:左=原 JSON,右=对比 JSON(单行字符串,避免 pre-wrap 产生空行)
+       left/right 为 {no, text, cls} 或 null(该侧无对应行,显示占位) */
+    function jdRow(rowCls, left, right) {
+      const lGut = left ? left.no : '';
+      const lCode = left
+        ? `<span class="jdl-code ${left.cls}">${escapeHtml(left.text)}</span>`
+        : `<span class="jdl-code jdl-empty"></span>`;
+      const rGut = right ? right.no : '';
+      const rCode = right
+        ? `<span class="jdl-code ${right.cls}">${escapeHtml(right.text)}</span>`
+        : `<span class="jdl-code jdl-empty"></span>`;
+      return `<div class="jdl-row ${rowCls}">` +
+        `<span class="jdl-gut">${lGut}</span>` + lCode +
+        `<span class="jdl-gut jdl-rgut">${rGut}</span>` + rCode +
+        `</div>`;
+    }
+
+    function jsonDiffCompare() {
+      const rawA = document.getElementById('jsondiff-a').value.trim();
+      const rawB = document.getElementById('jsondiff-b').value.trim();
+      const resultEl = document.getElementById('jsondiff-result');
+      const summaryEl = document.getElementById('jsondiff-summary');
+
+      if (!rawA || !rawB) {
+        showMessage('jsondiff-message', '请在左右两侧都粘贴 JSON', 'error');
+        return;
+      }
+
+      let objA, objB;
+      try {
+        objA = JSON.parse(rawA);
+      } catch (e) {
+        showMessage('jsondiff-message', '左侧 JSON 解析失败: ' + e.message, 'error');
+        document.getElementById('jsondiff-status').textContent = '左侧非法';
+        return;
+      }
+      try {
+        objB = JSON.parse(rawB);
+      } catch (e) {
+        showMessage('jsondiff-message', '右侧 JSON 解析失败: ' + e.message, 'error');
+        document.getElementById('jsondiff-status').textContent = '右侧非法';
+        return;
+      }
+
+      // 规范化:可选地排序对象 key,再美化成多行文本
+      const sortKeys = document.getElementById('jsondiff-sortkeys').checked;
+      const ignoreIndent = document.getElementById('jsondiff-ignoreindent').checked;
+      const normA = sortKeys ? jdSortDeep(objA) : objA;
+      const normB = sortKeys ? jdSortDeep(objB) : objB;
+      const linesA = JSON.stringify(normA, null, 2).split('\n');
+      const linesB = JSON.stringify(normB, null, 2).split('\n');
+
+      // 比对用的 key:忽略缩进时去掉前导空格,这样嵌套层级不同(包含关系)
+      // 的相同内容仍能跨层级匹配;显示时仍用各自的原始行(保留缩进)。
+      const keyA = ignoreIndent ? linesA.map(l => l.replace(/^\s+/, '')) : linesA;
+      const keyB = ignoreIndent ? linesB.map(l => l.replace(/^\s+/, '')) : linesB;
+
+      // 复用项目已有的 LCS 逐行 diff;ops 只用来定 same/del/add 顺序,
+      // 文本一律回取 linesA/linesB 的原始行(ai/bi 计数对齐)。
+      const ops = diffLines(keyA, keyB);
+
+      let ai = 0, bi = 0;
+      let oldNo = 0, newNo = 0;
+      let nAdd = 0, nDel = 0, nSame = 0;
+      let html = '';
+      // 把连续的删除/新增配对到同一行,做到左右并排对照
+      let i = 0;
+      while (i < ops.length) {
+        if (ops[i].type === 'same') {
+          oldNo++; newNo++; nSame++;
+          html += jdRow('same',
+            { no: oldNo, text: linesA[ai], cls: '' },
+            { no: newNo, text: linesB[bi], cls: '' });
+          ai++; bi++; i++;
+          continue;
+        }
+        // 收集一段连续的变化块(del 在前、add 在后,由 LCS 保证)
+        const dels = [], adds = [];
+        while (i < ops.length && ops[i].type !== 'same') {
+          if (ops[i].type === 'del') { dels.push(linesA[ai]); ai++; }
+          else { adds.push(linesB[bi]); bi++; }
+          i++;
+        }
+        nDel += dels.length; nAdd += adds.length;
+        const rows = Math.max(dels.length, adds.length);
+        for (let k = 0; k < rows; k++) {
+          const hasL = k < dels.length, hasR = k < adds.length;
+          if (hasL) oldNo++;
+          if (hasR) newNo++;
+          html += jdRow('change',
+            hasL ? { no: oldNo, text: dels[k], cls: 'jdl-del' } : null,
+            hasR ? { no: newNo, text: adds[k], cls: 'jdl-add' } : null);
+        }
+      }
+
+      const changed = nAdd + nDel;
+      document.getElementById('jsondiff-add').textContent = nAdd;
+      document.getElementById('jsondiff-del').textContent = nDel;
+      document.getElementById('jsondiff-mod').textContent = nSame;
+      document.getElementById('jsondiff-count').textContent = changed;
+
+      if (changed === 0) {
+        summaryEl.hidden = true;
+        resultEl.innerHTML = '两个 JSON 完全一致 ✓';
+        document.getElementById('jsondiff-status').textContent = '完全一致';
+        showMessage('jsondiff-message', '两个 JSON 内容完全一致' + (sortKeys ? '(已忽略字段顺序)' : ''), 'success');
+      } else {
+        summaryEl.hidden = false;
+        resultEl.innerHTML = html;
+        document.getElementById('jsondiff-status').textContent = '有差异';
+        showMessage('jsondiff-message', `发现 ${changed} 行差异 (新增 ${nAdd} · 删除 ${nDel})`, 'success');
+        // 滚动到第一处差异,直观看到从哪开始变化
+        const firstChange = resultEl.querySelector('.jdl-row.change');
+        if (firstChange) firstChange.scrollIntoView({ block: 'nearest' });
+      }
+    }
+
+    function jsonDiffExample() {
+      document.getElementById('jsondiff-a').value = JSON.stringify([
+        333, 334, 337, 353, 354, 355, 356, 331, 332, 338, 339, 340, 344, 348, 359, 360, 544, 546, 536
+      ], null, 2);
+      document.getElementById('jsondiff-b').value = JSON.stringify([
+        333, 334, 337, 353, 354, 355, 356, 331, 332, 338, 339, 340, 395, 535, 344, 348, 359, 360, 544, 546, 536, 537
+      ], null, 2);
+      jsonDiffCompare();
+      showMessage('jsondiff-message', '已加载示例', 'success');
+    }
+
+    function jsonDiffClear() {
+      document.getElementById('jsondiff-a').value = '';
+      document.getElementById('jsondiff-b').value = '';
+      document.getElementById('jsondiff-result').innerHTML = '差异结果会显示在这里';
+      document.getElementById('jsondiff-summary').hidden = true;
+      document.getElementById('jsondiff-count').textContent = '0';
+      document.getElementById('jsondiff-status').textContent = '空闲';
+      showMessage('jsondiff-message', '', '');
     }
 
     /* ========================================== */
