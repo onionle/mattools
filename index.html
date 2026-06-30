@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MatTools - JSON 格式化、Base64、URL 编码、时间戳转换 · 在线开发者工具</title>
-  <meta name="description" content="MatTools 开发者工具集,提供 JSON 格式化、Base64 编解码、URL 编码、JSON 转 TypeScript、时间戳转换等实用工具。数据全部在浏览器本地处理,免费、安全、无广告。">
-  <meta name="keywords" content="JSON格式化,Base64编码,URL编码,JSON转TypeScript,时间戳转换,在线开发者工具">
+  <title>MatTools - JSON/YAML 格式化、Base64、URL 编码、时间戳转换 · 在线开发者工具</title>
+  <meta name="description" content="MatTools 开发者工具集,提供 JSON 格式化、YAML 格式化、Base64 编解码、URL 编码、JSON 转 TypeScript、时间戳转换等实用工具。数据全部在浏览器本地处理,免费、安全、无广告。">
+  <meta name="keywords" content="JSON格式化,YAML格式化,Base64编码,URL编码,JSON转TypeScript,时间戳转换,在线开发者工具">
   
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'%3E%3Crect x='1.5' y='1.5' width='57' height='57' rx='14' fill='%23ffffff' stroke='%23e6e6e6' stroke-width='2'/%3E%3Ctext x='15' y='27' font-family='monospace' font-size='22' font-weight='700' fill='%2318181b' text-anchor='middle'%3EM%3C/text%3E%3Ctext x='45' y='27' font-family='monospace' font-size='22' font-weight='700' fill='%23e8852b' text-anchor='middle'%3EA%3C/text%3E%3Ctext x='15' y='53' font-family='monospace' font-size='22' font-weight='700' fill='%23e8852b' text-anchor='middle'%3ET%3C/text%3E%3Ctext x='45' y='53' font-family='monospace' font-size='22' font-weight='700' fill='%2318181b' text-anchor='middle'%3ET%3C/text%3E%3C/svg%3E">
 
@@ -1758,6 +1758,10 @@
               <span class="tool-ic">{ }</span>
               <span class="tool-meta"><span class="tool-name">JSON 格式化</span><span class="tool-desc">格式化 · 压缩 · 校验 JSON</span></span>
             </a>
+            <a class="tool-card" data-name="yaml yml 格式化 format pretty 校验 整理" onclick="openTool('yaml')">
+              <span class="tool-ic">YML</span>
+              <span class="tool-meta"><span class="tool-name">YAML 格式化</span><span class="tool-desc">缩进整理 · 基础校验 · 去空行</span></span>
+            </a>
             <a class="tool-card" data-name="jsondiff json 对比 比较 差异 diff compare 结构" onclick="openTool('jsondiff')">
               <span class="tool-ic">{≠}</span>
               <span class="tool-meta"><span class="tool-name">JSON 对比</span><span class="tool-desc">语义结构对比 · 字段差异</span></span>
@@ -1881,6 +1885,7 @@
         <div class="nav-group">
           <div class="nav-cap">数据格式</div>
           <a class="nav-item" data-tool="json" data-name="json 格式化 format pretty 校验 压缩" onclick="openTool('json')">JSON 格式化</a>
+          <a class="nav-item" data-tool="yaml" data-name="yaml yml 格式化 format pretty 校验 整理" onclick="openTool('yaml')">YAML 格式化</a>
           <a class="nav-item" data-tool="jsondiff" data-name="jsondiff json 对比 比较 差异 diff compare 结构" onclick="openTool('jsondiff')">JSON 对比</a>
           <a class="nav-item" data-tool="json2ts" data-name="json2ts json typescript 类型 ts 转换" onclick="openTool('json2ts')">JSON 转 TypeScript</a>
           <a class="nav-item" data-tool="json2java" data-name="json2java json java bean pojo lombok 实体类 转换" onclick="openTool('json2java')">JSON 转 Java Bean</a>
@@ -1961,6 +1966,51 @@
           <div class="status-item">大小: <span class="value" id="json-size">0</span> 字节</div>
           <div class="status-item">键数: <span class="value" id="json-keys">0</span></div>
           <div class="status-message" id="json-message"></div>
+        </div>
+      </div>
+
+      <!-- ===== YAML 工具 ===== -->
+      <div class="tool-page" id="page-yaml">
+        <div class="toolbar">
+          <button class="action primary" data-action="format" onclick="yamlFormat()">▶ 格式化</button>
+          <button class="action" data-action="compact" onclick="yamlCompact()">去空行</button>
+          <button class="action" data-action="validate" onclick="yamlValidate()">校验</button>
+          <button class="action" data-action="example" onclick="yamlExample()">示例</button>
+          <div class="toolbar-spacer"></div>
+          <button class="text-only" onclick="yamlClear()">清空</button>
+          <button class="text-only" onclick="yamlCopy()">复制结果</button>
+        </div>
+        <div class="options-bar">
+          <div class="option-group">
+            <label>缩进</label>
+            <select class="inline-input" id="yaml-indent" onchange="yamlFormat()">
+              <option value="2">2 空格</option>
+              <option value="4">4 空格</option>
+            </select>
+          </div>
+          <span style="color: var(--text-tertiary);">·</span>
+          <span style="color: var(--text-tertiary);">适合常见配置文件,会保留注释与块文本</span>
+        </div>
+        <div class="editor-wrapper">
+          <div class="editor-panel">
+            <div class="panel-header">→ 输入 YAML</div>
+            <textarea id="yaml-input" placeholder="粘贴 YAML / YML 内容
+server:
+  port: 8080
+  profiles:
+    - dev
+    - test"></textarea>
+          </div>
+          <div class="editor-panel">
+            <div class="panel-header output-header">← 输出</div>
+            <textarea id="yaml-output" class="output" readonly placeholder="格式化后的 YAML 会显示在这里"></textarea>
+          </div>
+        </div>
+        <div class="status-bar">
+          <div class="status-item">状态: <span class="value" id="yaml-status">空闲</span></div>
+          <div class="status-item">行数: <span class="value" id="yaml-lines">0</span></div>
+          <div class="status-item">键数: <span class="value" id="yaml-keys">0</span></div>
+          <div class="status-message" id="yaml-message"></div>
         </div>
       </div>
 
@@ -2686,7 +2736,7 @@ hello world example
     </section>
 
     <footer>
-      <span class="footer-brand"><span class="matt">MatT</span><span class="ools">ools</span><span class="logo-cursor" aria-hidden="true"></span></span> · 所有数据在浏览器本地处理,不会上传到任何服务器 · <span class="footer-version">v0.3.0</span>
+      <span class="footer-brand"><span class="matt">MatT</span><span class="ools">ools</span><span class="logo-cursor" aria-hidden="true"></span></span> · 所有数据在浏览器本地处理,不会上传到任何服务器 · <span class="footer-version">v0.3.1</span>
     </footer>
   </div>
 
@@ -2746,7 +2796,7 @@ hello world example
     /* ========== 工具切换 ========== */
     /* 工具名映射(用于顶部标题) */
     const TOOL_NAMES = {
-      json: 'JSON 格式化', json2ts: 'JSON 转 TypeScript', json2java: 'JSON 转 Java Bean', jsondiff: 'JSON 对比',
+      json: 'JSON 格式化', yaml: 'YAML 格式化', json2ts: 'JSON 转 TypeScript', json2java: 'JSON 转 Java Bean', jsondiff: 'JSON 对比',
       base64: 'Base64 编解码', url: 'URL 编码', caseconv: '大小写转换',
       jwt: 'JWT 解析', hash: 'Hash 哈希',
       timestamp: '时间戳转换', timecalc: '时间计算器', cron: 'CRON 表达式',
@@ -2801,7 +2851,7 @@ hello world example
       if (tv && tv.hidden) return; // 已在首页
       if (tv) tv.hidden = true;
       document.getElementById('home-view').hidden = false;
-      document.title = 'MatTools - JSON 格式化、Base64、URL 编码、时间戳转换 · 在线开发者工具';
+      document.title = 'MatTools - JSON/YAML 格式化、Base64、URL 编码、时间戳转换 · 在线开发者工具';
       try { history.replaceState(null, '', location.pathname); } catch (e) {}
     }
 
@@ -3041,6 +3091,197 @@ hello world example
       jsonUpdateStatus('');
       setActiveAction('json', 'format');
       showMessage('json-message', '', '');
+    }
+
+    /* ========== YAML 工具 ========== */
+    const yamlInput = document.getElementById('yaml-input');
+    const yamlOutput = document.getElementById('yaml-output');
+
+    function yamlIndentSize() {
+      return Number(document.getElementById('yaml-indent').value) || 2;
+    }
+
+    function yamlCountKeys(text) {
+      const matches = text.match(/^\s*(?:-\s*)?["']?[A-Za-z0-9_.-]+["']?\s*:/gm);
+      return matches ? matches.length : 0;
+    }
+
+    function yamlUpdateStatus(text) {
+      const value = text || '';
+      document.getElementById('yaml-lines').textContent = value ? value.split(/\r?\n/).length : 0;
+      document.getElementById('yaml-keys').textContent = yamlCountKeys(value);
+      if (!value.trim()) document.getElementById('yaml-status').textContent = '空闲';
+    }
+
+    if (yamlInput) yamlInput.addEventListener('input', () => yamlUpdateStatus(yamlInput.value));
+
+    function yamlNormalizeLine(content) {
+      if (!content.trim()) return '';
+      const raw = content.trim();
+      if (raw.startsWith('#') || raw === '---' || raw === '...') return raw;
+      if (/^[|>][+-]?$/.test(raw)) return raw;
+
+      let normalized = raw;
+      const seq = normalized.match(/^-\s*(.*)$/);
+      if (seq) normalized = '- ' + seq[1].trimStart();
+      normalized = normalized.replace(/^(-\s*)?([^"'[{#][^:#]*?)\s*:\s*(.*)$/, (m, dash, key, value) => {
+        const prefix = dash || '';
+        return prefix + key.trim() + ':' + (value ? ' ' + value.trim() : '');
+      });
+      return normalized;
+    }
+
+    function yamlFormatText(text, compact) {
+      const indent = yamlIndentSize();
+      const lines = text.replace(/\r\n?/g, '\n').split('\n');
+      const out = [];
+      let inBlock = false;
+      let blockIndent = 0;
+
+      lines.forEach(line => {
+        const noTrail = line.replace(/[ \t]+$/g, '');
+        const trimmed = noTrail.trim();
+        if (!trimmed) {
+          if (!compact) out.push('');
+          return;
+        }
+
+        const leading = (noTrail.match(/^\s*/) || [''])[0].replace(/\t/g, '  ').length;
+        if (inBlock && leading > blockIndent) {
+          out.push(noTrail.replace(/\t/g, '  '));
+          return;
+        }
+        inBlock = false;
+
+        const level = Math.max(0, Math.floor(leading / indent));
+        const normalized = yamlNormalizeLine(noTrail);
+        out.push(' '.repeat(level * indent) + normalized);
+
+        if (/[|>][+-]?$/.test(normalized)) {
+          inBlock = true;
+          blockIndent = leading;
+        }
+      });
+
+      return out.join('\n').replace(/\n{3,}/g, compact ? '\n' : '\n\n').trim();
+    }
+
+    function yamlBasicValidate(text) {
+      const indent = yamlIndentSize();
+      const errors = [];
+      const keyScopes = [new Set()];
+      const stack = [{ indent: -1, path: '' }];
+      let inBlock = false;
+      let blockIndent = 0;
+
+      text.replace(/\r\n?/g, '\n').split('\n').forEach((line, idx) => {
+        const lineNo = idx + 1;
+        if (!line.trim() || line.trim().startsWith('#')) return;
+        if (/\t/.test(line)) errors.push(`第 ${lineNo} 行包含 Tab,建议改为空格`);
+        const leading = (line.match(/^ */) || [''])[0].length;
+        const trimmed = line.trim();
+        if (inBlock && leading > blockIndent) return;
+        inBlock = false;
+        if (leading % indent !== 0) errors.push(`第 ${lineNo} 行缩进不是 ${indent} 的倍数`);
+        if (/:\S/.test(trimmed) && !/^[^"']*https?:\/\//.test(trimmed)) errors.push(`第 ${lineNo} 行冒号后建议保留空格`);
+        if (/^[^#]*,\s*$/.test(trimmed)) errors.push(`第 ${lineNo} 行末尾像 JSON 逗号,YAML 通常不需要`);
+        if ((trimmed.match(/"/g) || []).length % 2 === 1 || (trimmed.match(/'/g) || []).length % 2 === 1) {
+          errors.push(`第 ${lineNo} 行引号数量不成对`);
+        }
+
+        while (stack.length && leading <= stack[stack.length - 1].indent) {
+          stack.pop();
+          keyScopes.pop();
+        }
+        if (!keyScopes.length) keyScopes.push(new Set());
+        const keyMatch = trimmed.match(/^(?:-\s*)?["']?([A-Za-z0-9_.-]+)["']?\s*:/);
+        if (keyMatch) {
+          const scope = keyScopes[keyScopes.length - 1];
+          const key = keyMatch[1];
+          if (scope.has(key)) errors.push(`第 ${lineNo} 行重复键: ${key}`);
+          scope.add(key);
+          stack.push({ indent: leading, path: key });
+          keyScopes.push(new Set());
+        } else if (!/^[-?]\s+/.test(trimmed) && !/^---$|^\.\.\.$/.test(trimmed) && !/^[|>][+-]?$/.test(trimmed)) {
+          errors.push(`第 ${lineNo} 行不像合法的键值或列表项`);
+        }
+        if (/[|>][+-]?$/.test(trimmed)) {
+          inBlock = true;
+          blockIndent = leading;
+        }
+      });
+      return errors;
+    }
+
+    function yamlFormat() {
+      const text = yamlInput.value;
+      if (!text.trim()) return showMessage('yaml-message', '请先输入 YAML', 'error');
+      yamlOutput.value = yamlFormatText(text, false);
+      yamlUpdateStatus(yamlOutput.value);
+      document.getElementById('yaml-status').textContent = '已格式化';
+      setActiveAction('yaml', 'format');
+      showMessage('yaml-message', '格式化成功', 'success');
+    }
+
+    function yamlCompact() {
+      const text = yamlInput.value;
+      if (!text.trim()) return showMessage('yaml-message', '请先输入 YAML', 'error');
+      yamlOutput.value = yamlFormatText(text, true);
+      yamlUpdateStatus(yamlOutput.value);
+      document.getElementById('yaml-status').textContent = '已整理';
+      setActiveAction('yaml', 'compact');
+      showMessage('yaml-message', '已去除空行并整理缩进', 'success');
+    }
+
+    function yamlValidate() {
+      const text = yamlInput.value.trim();
+      if (!text) return showMessage('yaml-message', '请先输入 YAML', 'error');
+      const errors = yamlBasicValidate(yamlInput.value);
+      yamlUpdateStatus(yamlInput.value);
+      if (errors.length) {
+        document.getElementById('yaml-status').textContent = '警告';
+        setActiveAction('yaml', 'validate');
+        showMessage('yaml-message', errors[0], 'error');
+        return;
+      }
+      document.getElementById('yaml-status').textContent = '通过';
+      setActiveAction('yaml', 'validate');
+      showMessage('yaml-message', '基础校验通过', 'success');
+    }
+
+    function yamlExample() {
+      yamlInput.value = [
+        'app:',
+        '  name: mattools',
+        '  env: dev',
+        'server:',
+        '  port: 8080',
+        '  hosts:',
+        '    - localhost',
+        '    - api.example.com',
+        'features:',
+        '  yamlFormatter: true',
+        '  tags:',
+        '    - developer',
+        '    - tools',
+        'description: |',
+        '  所有数据都在浏览器本地处理。',
+        '  适合整理常见配置文件。'
+      ].join('\n');
+      yamlFormat();
+      setActiveAction('yaml', 'example');
+      showMessage('yaml-message', '已加载示例', 'success');
+    }
+
+    function yamlCopy() { copyToClipboard(yamlOutput.value, 'yaml-message'); }
+
+    function yamlClear() {
+      yamlInput.value = '';
+      yamlOutput.value = '';
+      yamlUpdateStatus('');
+      document.getElementById('yaml-status').textContent = '空闲';
+      setActiveAction('yaml', 'format');
+      showMessage('yaml-message', '', '');
     }
 
     /* ========== 时间戳工具 ========== */
